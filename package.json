@@ -1,0 +1,62 @@
+{
+  "name": "data-collector",
+  "version": "1.0.0",
+  "description": "An application to create and run scripts that collect data from the web.",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "babel": "babel",
+    "webpack": "webpack",
+    "dev": "webpack-dev-server --inline --hot --content-base .",
+    "standard": "standard"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HendrikCrause/data-collector.git"
+  },
+  "keywords": [
+    "data",
+    "collect",
+    "web",
+    "scrape",
+    "http",
+    "request",
+    "api"
+  ],
+  "author": "Hendrik Crause",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/HendrikCrause/data-collector/issues"
+  },
+  "homepage": "https://github.com/HendrikCrause/data-collector#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "babel-core": "^6.14.0",
+    "babel-jest": "^14.1.0",
+    "babel-loader": "^6.2.5",
+    "babel-plugin-add-module-exports": "^0.2.1",
+    "babel-plugin-react-html-attrs": "^2.0.0",
+    "babel-plugin-transform-class-properties": "^6.11.5",
+    "babel-plugin-transform-decorators-legacy": "^1.3.4",
+    "babel-polyfill": "^6.13.0",
+    "babel-preset-es2015": "^6.14.0",
+    "babel-preset-react": "^6.11.1",
+    "babel-preset-stage-0": "^6.5.0",
+    "css-loader": "^0.24.0",
+    "extract-text-webpack-plugin": "^1.0.1",
+    "file-loader": "^0.9.0",
+    "jest-cli": "^14.1.0",
+    "material-ui": "^0.15.4",
+    "node-sass": "^3.8.0",
+    "react": "^15.3.1",
+    "react-document-title": "^2.0.2",
+    "react-dom": "^15.3.1",
+    "react-tap-event-plugin": "^1.0.0",
+    "roboto-font": "^0.1.0",
+    "standard": "^8.0.0",
+    "style-loader": "^0.13.1",
+    "url-loader": "^0.5.7",
+    "webpack": "^1.13.2",
+    "webpack-dev-server": "^1.15.0"
+  }
+}
