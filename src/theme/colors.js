@@ -1,25 +1,21 @@
-import {
-  red500, deepPurple500, deepPurple700, pinkA200,
-  grey100, grey300, grey400, grey500,
-  white, darkBlack, fullBlack,
-} from 'material-ui/styles/colors'
+import * as ui from 'material-ui/styles/colors'
 import {fade} from 'material-ui/utils/colorManipulator'
 
 const colors = {
-    primary1Color: deepPurple500,
-    primary2Color: deepPurple700,
-    primary3Color: grey400,
-    accent1Color: pinkA200,
-    accent2Color: grey100,
-    accent3Color: grey500,
-    textColor: darkBlack,
-    alternateTextColor: white,
-    canvasColor: white,
-    borderColor: grey300,
-    disabledColor: fade(darkBlack, 0.3),
-    pickerHeaderColor: deepPurple500,
-    clockCircleColor: fade(darkBlack, 0.07),
-    shadowColor: fullBlack,
+    primary1Color: ui.amber500,
+    primary2Color: ui.amber800,
+    primary3Color: ui.grey400,
+    accent1Color: ui.pinkA200,
+    accent2Color: ui.grey100,
+    accent3Color: ui.grey500,
+    textColor: ui.darkBlack,
+    alternateTextColor: ui.grey900,
+    canvasColor: ui.white,
+    borderColor: ui.grey300,
+    disabledColor: fade(ui.darkBlack, 0.3),
+    pickerHeaderColor: ui.amber500,
+    clockCircleColor: fade(ui.darkBlack, 0.07),
+    shadowColor: ui.fullBlack,
 }
 
 export default colors

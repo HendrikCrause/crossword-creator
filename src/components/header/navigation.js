@@ -7,7 +7,7 @@ class Navigation extends React.Component {
   render() {
     return (
       <Drawer
-        docked={false}
+        docked={true}
         open={this.props.open}
         onRequestChange={this.props.toggleNav}
       >
