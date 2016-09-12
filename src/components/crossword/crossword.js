@@ -1,29 +1,44 @@
 import React from 'react'
 import Block from './block'
+import DisabledBlock from './disabledblock'
+import Paper from 'material-ui/Paper'
 
-const blockSize = 30
+const blockSize = 40
+
+const puzzle = [
+  ['a', 'b', '#'],
+  ['#', '1', ''],
+  ['', '#', '#']
+]
 
 class Crossword extends React.Component {
 
   render() {
-    const puzzle = [
-      ['a', 'b', '#'],
-      ['#', '1', ''],
-      ['', '#', '#']
-    ]
+    const style = {
+      margin: 20,
+      display: 'inline-block'
+    }
 
     return (
-      <div style={{
-        margin: 10
-      }}>
+      <Paper
+        zDepth={2}
+        style={style}
+      >
         { puzzle.map((row) => {
-          let renderedRow = row.map((col) => {
-            return (<Block value={col} size={blockSize} />)
-          })
-          renderedRow.push( (<br/>) )
-          return renderedRow
+          return (
+            <Paper>
+              {
+                row.map((col) => {
+                  if(col === '#'){
+                    return (<DisabledBlock size={blockSize} />)
+                  }
+                  return (<Block value={col} size={blockSize} number={1} />)
+                })
+              }
+            </Paper>
+          )
         }) }
-      </div>
+      </Paper>
     )
   }
 }
