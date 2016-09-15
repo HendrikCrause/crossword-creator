@@ -24,15 +24,16 @@ class Crossword extends React.Component {
         zDepth={2}
         style={style}
       >
-        { puzzle.map((row) => {
+        { puzzle.map((row, j) => {
           return (
-            <Paper>
+            <Paper key={'row' + j}>
               {
-                row.map((col) => {
+                row.map((col, i) => {
+                  const key = j + '_' + i
                   if(col === '#'){
-                    return (<DisabledBlock size={blockSize} />)
+                    return (<DisabledBlock key={key} size={blockSize} />)
                   }
-                  return (<Block value={col} size={blockSize} number={1} />)
+                  return (<Block key={key} idx={key} value={col} size={blockSize} number={1} />)
                 })
               }
             </Paper>

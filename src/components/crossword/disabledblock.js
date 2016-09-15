@@ -17,7 +17,7 @@ class DisabledBlock extends React.Component {
       verticalAlign: 'top'
     }
 
-    return ( <div style={style} /> )
+    return ( <div style={style} id={this.props.idx } /> )
   }
 }
 

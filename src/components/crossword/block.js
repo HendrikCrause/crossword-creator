@@ -39,6 +39,7 @@ class Block extends React.Component {
           inputStyle={{textAlign: 'center'}}
           defaultValue={this.props.value}
           underlineStyle={{width: '90%'}}
+          id={this.props.idx}
         />
       </Paper>
     )
