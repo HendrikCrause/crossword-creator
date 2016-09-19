@@ -1,19 +1,30 @@
 import React from 'react'
-import Drawer from 'material-ui/Drawer'
-import MenuItem from 'material-ui/MenuItem'
+import { Tabs, Tab } from 'material-ui/Tabs'
 
 class Navigation extends React.Component {
 
+  navigate(tab) {
+    alert(tab.props['route'])
+  }
+
   render() {
+    const tabsStyle = {
+      width: 200
+    }
+
     return (
-      <Drawer
-        docked={true}
-        open={this.props.open}
-        onRequestChange={this.props.toggleNav}
-      >
-        <MenuItem onTouchTap={this.props.toggleNav}>Menu Item</MenuItem>
-        <MenuItem onTouchTap={this.props.toggleNav}>Menu Item 2</MenuItem>
-      </Drawer>
+      <Tabs style={tabsStyle}>
+        <Tab
+          label='Create'
+          route='create'
+          onActive={this.navigate}
+        />
+        <Tab
+          label='Complete'
+          route='complete'
+          onActive={this.navigate}
+        />
+      </Tabs>
     )
   }
 }

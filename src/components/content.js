@@ -10,8 +10,7 @@ class Content extends React.Component {
         width: '90%',
         margin: 'auto',
       }}>
-          <Crossword/>
-          <Clues/>
+          {this.props.children}
       </div>
     )
   }

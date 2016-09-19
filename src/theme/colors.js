@@ -5,7 +5,7 @@ const colors = {
     primary1Color: ui.amber500,
     primary2Color: ui.amber800,
     primary3Color: ui.grey400,
-    accent1Color: ui.pinkA200,
+    accent1Color: ui.deepPurpleA400,
     accent2Color: ui.grey100,
     accent3Color: ui.grey500,
     textColor: ui.darkBlack,

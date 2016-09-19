@@ -9,7 +9,9 @@ class Header extends React.Component {
       <AppBar
         title={appName}
         showMenuIconButton={false}
-      />
+      >
+        <Navigation />
+      </AppBar>
     )
   }
 }
