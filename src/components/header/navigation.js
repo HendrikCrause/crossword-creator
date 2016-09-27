@@ -1,29 +1,54 @@
 import React from 'react'
 import { Tabs, Tab } from 'material-ui/Tabs'
+import { hashHistory } from 'react-router'
 
 class Navigation extends React.Component {
 
+  constructor(props) {
+    super(props)
+    this.state = {
+      location: this.props.location.pathname
+    }
+  }
+
   navigate(tab) {
-    alert(tab.props['route'])
+    this.setState({location:tab.props['value']})
+    hashHistory.push(tab.props['value'])
   }
 
   render() {
     const tabsStyle = {
-      width: 200
+      width: 150
     }
 
+    const tabs = [
+      {
+        label: 'Home',
+        route: '/'
+      }, {
+        label: 'Create',
+        route: '/create'
+      }, {
+        label: 'Review',
+        route: '/review'
+      },
+    ]
+
     return (
-      <Tabs style={tabsStyle}>
-        <Tab
-          label='Create'
-          route='create'
-          onActive={this.navigate}
-        />
-        <Tab
-          label='Complete'
-          route='complete'
-          onActive={this.navigate}
-        />
+      <Tabs value={this.state.location}>
+        {
+          tabs.map(t => {
+            return (
+              <Tab
+                key={t.route}
+                value={t.route}
+                style={tabsStyle}
+                label={t.label}
+                onActive={this.navigate.bind(this)}
+              />
+            )
+          })
+        }
       </Tabs>
     )
   }

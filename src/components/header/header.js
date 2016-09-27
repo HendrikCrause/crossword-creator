@@ -10,7 +10,7 @@ class Header extends React.Component {
         title={appName}
         showMenuIconButton={false}
       >
-        <Navigation />
+        <Navigation location={this.props.location}/>
       </AppBar>
     )
   }

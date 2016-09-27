@@ -10,8 +10,8 @@ class Layout extends React.Component {
     return (
       <div>
         <DocumentTitle title={appName}/>
-        <Header/>
-        <Content/>
+        <Header location={this.props.location}/>
+        <Content>{this.props.children}</Content>
         <Footer/>
       </div>
     )

@@ -2,16 +2,15 @@ import React from 'react'
 import Crossword from '../crossword/crossword'
 import Clues from '../clues/clues'
 
-class Complete extends React.Component {
+class Welcome extends React.Component {
 
   render() {
     return (
       <div>
-          <Crossword/>
-          <Clues/>
+          <h1>Welcome Route</h1>
       </div>
     )
   }
 }
 
-export default Complete
+export default Welcome
