@@ -12,7 +12,7 @@ class ClueSection extends React.Component {
             {
               this.props.data.map((d) => {
                 return (
-                  <TableRow>
+                  <TableRow key={d.number}>
                     <TableRowColumn>{d.number}</TableRowColumn>
                     <TableRowColumn>{d.clue}</TableRowColumn>
                   </TableRow>

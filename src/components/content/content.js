@@ -1,6 +1,5 @@
 import React from 'react'
-import Crossword from './crossword/crossword'
-import Clues from './clues/clues'
+import Flow from './flow'
 
 class Content extends React.Component {
 
@@ -10,7 +9,7 @@ class Content extends React.Component {
         width: '90%',
         margin: 'auto',
       }}>
-          {this.props.children}
+          <Flow/>
       </div>
     )
   }

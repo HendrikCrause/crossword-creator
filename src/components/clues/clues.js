@@ -38,9 +38,10 @@ class Clues extends React.Component {
         <CardTitle title="Clues"/>
         <CardText>
           {
-            clueData.map((c) => {
+            clueData.map((c, i) => {
               return (
                 <ClueSection
+                  key={i}
                   heading={c.heading}
                   data={c.data}
                 />

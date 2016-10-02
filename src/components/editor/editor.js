@@ -9,7 +9,7 @@ import ActionDelete from 'material-ui/svg-icons/action/delete'
 import ContentAdd from 'material-ui/svg-icons/content/add'
 import ContentClear from 'material-ui/svg-icons/content/clear'
 
-const MIN_ROWS = 7
+const MIN_ROWS = 5
 
 const colStyle = {
   fontSize: 14
