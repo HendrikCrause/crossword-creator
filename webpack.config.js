@@ -31,7 +31,7 @@ module.exports = {
         }
       },
       {
-        test: /\.ttf$|\.eot$|\.woff$/,
+        test: /\.ttf$|\.eot$|\.woff$|\.woff2$/,
         loader: 'file',
         query: {
           name: './fonts/[name].[ext]',
