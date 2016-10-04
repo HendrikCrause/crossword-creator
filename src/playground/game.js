@@ -1,14 +1,8 @@
 'use strict'
 
-function sortByLength(arr) {
-  return arr.slice().sort((a, b) => {
-    return b.length - a.length
-  })
-}
-
 const direction = {
-  HORIZONTAL: 1,
-  VERTICAL: 2
+  HORIZONTAL: 'horizontal',
+  VERTICAL: 'vertical'
 }
 
 const BLACK_CELL_PLACEHOLDER = '_'
@@ -27,6 +21,76 @@ class Board {
 
   pretty() {
     return this.board.map((row) => row.join(' ')).join('\n')
+  }
+
+  computePuzzle(words) {
+    let sortedWords = this.sortByLength(words)
+    sortedWords.every((w) => {
+      let placement = this.suggestPlacement(w)
+      if(placement === null) {
+        return false
+      }
+      this.placeWord(w, {row: placement.row, col: placement.col}, placement.dir)
+      return true
+    })
+  }
+
+  sortByLength(arr) {
+    return arr.slice().sort((a, b) => {
+      return b.length - a.length
+    })
+  }
+
+  suggestPlacement(word) {
+    let chars = Array.from(word)
+    let matchingLocations = chars
+      .map((c) => this.locationsOfChar(c))
+      .filter((a) => a.length !== 0)
+
+    if(matchingLocations.length === 0) {
+      return this.suggestRandomPlacement(word)
+    }
+
+    matchingLocations.forEach()
+  }
+
+  findStartCell(charIndex, cell, dir) {
+    if(dir === direction.HORIZONTAL) {
+      return {
+        row: cell.row,
+        col: cell.col - charIndex
+      }
+    } else if(dir === direction.VERTICAL) {
+      return {
+        row: cell.row - charIndex,
+        col: cell.col
+      }
+    } else {
+      throw new Error('Unknown direction ' + dir)
+    }
+  }
+
+  suggestRandomPlacement(word) {
+    let iter = 0
+    const MAX_ITERATIONS = 100
+    while(iter < MAX_ITERATIONS) {
+      iter += 1
+
+      let cell = this.randomCell()
+      if(this.canPlaceWord(word, cell, direction.HORIZONTAL)) {
+        return {
+          row: cell.row,
+          col: cell.col,
+          dir: direction.HORIZONTAL
+        }
+      } else if(this.canPlaceWord(word, cell, direction.VERTICAL)) {
+        return {
+          row: cell.row,
+          col: cell.col,
+          dir: direction.VERTICAL
+        }
+      }
+    }
   }
 
   placeWord(word, startCell, dir) {
@@ -53,6 +117,11 @@ class Board {
   }
 
   trimBoard() {
+    this.trimRows()
+    this.trimColumns()
+  }
+
+  trimRows() {
     let rowsToRemove = []
     let columnsToRemove = []
     this.board.forEach((row, index) => {
@@ -61,7 +130,9 @@ class Board {
       }
     })
     rowsToRemove.reverse().forEach(this.removeRow.bind(this))
+  }
 
+  trimColumns() {
     Array.from(Array(this.width))
       .map((e, i) => this.getColumn(i))
       .forEach((col, index) => {
@@ -102,17 +173,18 @@ class Board {
     this.width -= 1
   }
 
-  locationOfChar(char) {
+  locationsOfChar(char) {
     let sparceBoard = this.sparceBoard()
+    return sparceBoard.filter((cell) => cell.value === char)
   }
 
   sparceBoard() {
     return this.board.reduce((total, row, rowIndex) => {
-      return total.concat(row.map((col, colIndex) => {
+      return total.concat(row.map((value, colIndex) => {
         return {
           row: rowIndex,
           col: colIndex,
-          value: col
+          value: value
         }
       }).filter((e) => e.value !== BLACK_CELL_PLACEHOLDER))
     }, [])
@@ -176,11 +248,11 @@ const HEIGHT = 10
 const WIDTH = 10
 const WORD_LIST = ['hello', 'world', 'how', 'are', 'the', 'children', 'doing', 'today', 'friend']
 
-let sortedWords = sortByLength(WORD_LIST)
 let board = new Board(HEIGHT, WIDTH)
+board.placeCharacter('c', {row: 5, col: 5})
+board.placeCharacter('h', board.findStartCell(2, {row: 5, col: 5}, direction.HORIZONTAL))
+board.placeCharacter('v', board.findStartCell(1, {row: 5, col: 5}, direction.VERTICAL))
 
-
-board.placeWord(sortedWords[0], {row: 1, col:2}, direction.VERTICAL)
-console.log(board.sparceBoard())
+console.log(board.pretty())
 
 // console.log(board.canPlaceWord('hello', {row:0,col:13}, direction.HORIZONTAL))
