@@ -45,13 +45,34 @@ class Board {
     let chars = Array.from(word)
     let matchingLocations = chars
       .map((c) => this.locationsOfChar(c))
-      .filter((a) => a.length !== 0)
 
-    if(matchingLocations.length === 0) {
+    let horizontalSuggestions = matchingLocations.map((locations, index) =>
+      locations.map((loc) => this.findStartCell(index, loc, direction.HORIZONTAL))
+        .filter((loc) => this.canPlaceWord(word, loc, direction.HORIZONTAL))
+        .map((s) => {
+          s.dir = direction.HORIZONTAL
+          return s
+        })
+    )
+
+    let verticalSuggestions = matchingLocations.map((locations, index) =>
+      locations.map((loc) => this.findStartCell(index, loc, direction.VERTICAL))
+        .filter((loc) => this.canPlaceWord(word, loc, direction.VERTICAL))
+        .map((s) => {
+          s.dir = direction.VERTICAL
+          return s
+        })
+    )
+
+    let suggestions = [].concat(horizontalSuggestions, verticalSuggestions).
+              reduce((t, c) => t.concat(c), [])
+
+    if(suggestions.length === 0) {
       return this.suggestRandomPlacement(word)
     }
 
-    matchingLocations.forEach()
+    let randIdx = Math.floor(Math.random() * suggestions.length)
+    return suggestions[randIdx]
   }
 
   findStartCell(charIndex, cell, dir) {
@@ -218,10 +239,17 @@ class Board {
   }
 
   charAt(cell) {
-    if(cell.row >= this.height || cell.col >= this.width) {
+    if(this.isOutsideBoard(cell)) {
       return null
     }
     return this.board[cell.row][cell.col]
+  }
+
+  isOutsideBoard(cell) {
+    return cell.row >= this.height
+        || cell.col >= this.width
+        || cell.row < 0
+        || cell.col < 0
   }
 
   placeCharacter(char, cell) {
@@ -249,10 +277,7 @@ const WIDTH = 10
 const WORD_LIST = ['hello', 'world', 'how', 'are', 'the', 'children', 'doing', 'today', 'friend']
 
 let board = new Board(HEIGHT, WIDTH)
-board.placeCharacter('c', {row: 5, col: 5})
-board.placeCharacter('h', board.findStartCell(2, {row: 5, col: 5}, direction.HORIZONTAL))
-board.placeCharacter('v', board.findStartCell(1, {row: 5, col: 5}, direction.VERTICAL))
-
+board.computePuzzle(WORD_LIST)
 console.log(board.pretty())
 
 // console.log(board.canPlaceWord('hello', {row:0,col:13}, direction.HORIZONTAL))
