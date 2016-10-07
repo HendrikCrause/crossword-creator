@@ -1,96 +1,16 @@
 import React from 'react'
-import { Table, TableBody, TableHeader,
-  TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table'
-import TextField from 'material-ui/TextField'
+import { Table, TableBody, TableHeader } from 'material-ui/Table'
 
-import RaisedButton from 'material-ui/RaisedButton'
-import FlatButton from 'material-ui/FlatButton'
-import ActionDelete from 'material-ui/svg-icons/action/delete'
-import ContentAdd from 'material-ui/svg-icons/content/add'
-import ContentClear from 'material-ui/svg-icons/content/clear'
+import Row from './row'
+import ButtonRow from './buttonrow'
+import HeaderRow from './headerrow'
+import { narrowStyle, wordStyle, colStyle, actionsStyle } from './styles'
+
+import crosswordStore from '../../store/crosswordstore'
 
 const MIN_ROWS = 5
 
-const colStyle = {
-  fontSize: 14
-}
-
-const narrowStyle = {
-  fontSize: 14,
-  width: 50
-}
-
-const wordStyle = {
-  fontSize: 14,
-  width: 100
-}
-
-const actionsStyle = {
-  fontSize: 14,
-  paddingRight: 0,
-  width: 100
-}
-
-class Row extends React.Component {
-
-  remove() {
-    this.props.handleRemoveWord(this.props.number)
-  }
-
-  updateWord(event) {
-    this.props.handleUpdateWord(this.props.number, {
-      word: event.target.value,
-      clue: this.props.clue
-    })
-  }
-
-  updateClue(event) {
-    this.props.handleUpdateWord(this.props.number, {
-      word: this.props.word,
-      clue: event.target.value
-    })
-  }
-
-  render() {
-    return (
-      <TableRow>
-        <TableRowColumn style={narrowStyle}>{this.props.number + 1}</TableRowColumn>
-        <TableRowColumn style={wordStyle}>
-          <TextField
-            value={this.props.word}
-            name={'word_' + this.props.number}
-            onChange={this.updateWord.bind(this)}
-          />
-        </TableRowColumn>
-        <TableRowColumn style={colStyle}>
-          <TextField
-            fullWidth={true}
-            multiLine={true}
-            rows={1}
-            value={this.props.clue}
-            name={'clue_' + this.props.number }
-            onChange={this.updateClue.bind(this)}
-          />
-        </TableRowColumn>
-        <TableRowColumn style={wordStyle}>
-          <FlatButton
-            label="Remove"
-            icon={
-              <ContentClear />
-            }
-            labelPosition='before'
-            labelStyle={{
-              fontSize: 12
-            }}
-            onClick={this.remove.bind(this)}
-          />
-        </TableRowColumn>
-      </TableRow>
-    )
-  }
-}
-
-class Create extends React.Component {
+class Editor extends React.Component {
 
   constructor(props) {
     super(props)
@@ -107,8 +27,16 @@ class Create extends React.Component {
     }
 
     this.state = {
-      words: wordList
+      words: crosswordStore.getAllWords()
     }
+  }
+
+  componentWillMount() {
+    crosswordStore.on('change', () => {
+      this.setState({
+        words: crosswordStore.getAllWords()
+      })
+    })
   }
 
   addWord(){
@@ -145,20 +73,15 @@ class Create extends React.Component {
           displaySelectAll={false}
           adjustForCheckbox={false}
         >
-          <TableRow>
-            <TableHeaderColumn style={narrowStyle}>ID</TableHeaderColumn>
-            <TableHeaderColumn style={wordStyle}>Word</TableHeaderColumn>
-            <TableHeaderColumn style={colStyle}>Clue</TableHeaderColumn>
-            <TableHeaderColumn style={actionsStyle}>Actions</TableHeaderColumn>
-          </TableRow>
+          <HeaderRow/>
         </TableHeader>
         <TableBody displayRowCheckbox={false}>
           {
-            this.state.words.map((w, i) => {
+            this.state.words.map((w) => {
               return (
                 <Row
-                  key={i}
-                  number={i}
+                  key={w.number}
+                  number={w.number}
                   word={w.word}
                   clue={w.clue}
                   handleRemoveWord={this.removeWord.bind(this)}
@@ -167,24 +90,13 @@ class Create extends React.Component {
               )
             })
           }
-          <TableRow>
-            <TableRowColumn style={narrowStyle}></TableRowColumn>
-            <TableRowColumn>
-              <RaisedButton
-                label="Add"
-                primary={true}
-                icon={
-                  <ContentAdd />
-                }
-                labelPosition='before'
-                onClick={this.addWord.bind(this)}
-              />
-            </TableRowColumn>
-          </TableRow>
+          <ButtonRow
+            handleAddWord={this.addWord.bind(this)}
+          />
         </TableBody>
       </Table>
     )
   }
 }
 
-export default Create
+export default Editor
