@@ -7,6 +7,7 @@ import HeaderRow from './headerrow'
 import { narrowStyle, wordStyle, colStyle, actionsStyle } from './styles'
 
 import crosswordStore from '../../store/crosswordstore'
+import * as Actions from '../../actions/crosswordactions'
 
 const MIN_ROWS = 5
 
@@ -15,55 +16,41 @@ class Editor extends React.Component {
   constructor(props) {
     super(props)
 
-    let wordList = this.props.words || []
-    if(wordList.length < MIN_ROWS) {
-      Array.from(Array(MIN_ROWS - wordList.length))
-        .forEach((e) => {
-          wordList.push({
-            word: '',
-            clue: ''
-          })
-        })
-    }
-
     this.state = {
       words: crosswordStore.getAllWords()
     }
+    this.resetWords = this.resetWords.bind(this)
+  }
+
+  resetWords() {
+    this.setState({
+      words: crosswordStore.getAllWords()
+    })
   }
 
   componentWillMount() {
-    crosswordStore.on('change', () => {
-      this.setState({
-        words: crosswordStore.getAllWords()
-      })
-    })
+    crosswordStore.on('change', this.resetWords)
   }
 
-  addWord(){
-    let wordList = this.state.words
-    wordList.push({
-      word: '',
-      clue: ''
-    })
-    this.setState({
-      words: wordList
-    })
+  componentWillUnmount() {
+    crosswordStore.removeListener('change', this.resetWords)
   }
 
-  removeWord(index) {
-    let wordList = this.state.words
-    wordList.splice(index, 1)
-    this.setState({
-      words: wordList
-    })
+  addWord() {
+    Actions.addWord()
   }
 
-  updateWord(index, word) {
-    let wordList = this.state.words
-    wordList[index] = word
-    this.setState({
-      words: wordList
-    })
+  removeWord(number) {
+    Actions.removeWord(number)
+  }
+
+  updateWord(word) {
+    Actions.updateWord(word)
+    // let wordList = this.state.words
+    // wordList[number] = word
+    // this.setState({
+    //   words: wordList
+    // })
   }
 
   render() {

@@ -1,12 +1,12 @@
 import React from 'react'
 import AppBar from 'material-ui/AppBar'
-import { appName } from '../../constants'
+import { APP_NAME } from '../../constants'
 
 class Header extends React.Component {
   render() {
     return (
       <AppBar
-        title={appName}
+        title={APP_NAME}
         showMenuIconButton={false}
       />
     )

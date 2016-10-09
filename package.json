@@ -45,6 +45,7 @@
     "css-loader": "^0.24.0",
     "extract-text-webpack-plugin": "^1.0.1",
     "file-loader": "^0.9.0",
+    "flux": "^3.0.0",
     "history": "^4.2.0",
     "jest-cli": "^14.1.0",
     "material-ui": "^0.15.4",

@@ -18,7 +18,7 @@ class ButtonRow extends React.Component {
               <ContentAdd />
             }
             labelPosition='before'
-            onClick={this.props.handleAddWord}
+            onTouchTap={this.props.handleAddWord}
           />
         </TableRowColumn>
       </TableRow>

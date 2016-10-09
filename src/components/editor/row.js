@@ -14,14 +14,16 @@ class Row extends React.Component {
   }
 
   updateWord(event) {
-    this.props.handleUpdateWord(this.props.number, {
+    this.props.handleUpdateWord({
+      number: this.props.number,
       word: event.target.value,
       clue: this.props.clue
     })
   }
 
   updateClue(event) {
-    this.props.handleUpdateWord(this.props.number, {
+    this.props.handleUpdateWord({
+      number: this.props.number,
       word: this.props.word,
       clue: event.target.value
     })
@@ -54,7 +56,7 @@ class Row extends React.Component {
             icon={<ContentClear />}
             labelPosition='before'
             labelStyle={labelStyle}
-            onClick={this.remove.bind(this)}
+            onTouchTap={this.remove.bind(this)}
           />
         </TableRowColumn>
       </TableRow>
