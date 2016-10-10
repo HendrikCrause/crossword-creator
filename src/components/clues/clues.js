@@ -3,26 +3,8 @@ import { Card, CardActions, CardHeader, CardMedia, CardTitle, CardText } from 'm
 import SubHeader from 'material-ui/Subheader'
 import ClueSection from './section'
 
-const clueData = [
-  {
-    heading: 'Horizontal',
-    data: [
-      {
-        number: 1,
-        clue: 'This is the first clue'
-      }
-    ]
-  },
-  {
-    heading: 'Vertical',
-    data: [
-      {
-        number: 2,
-        clue: 'This is a vertical clue'
-      }
-    ]
-  }
-]
+import crosswordStore from '../../store/crosswordstore'
+import { ORIENTATION } from '../../constants'
 
 class Clues extends React.Component {
   render() {
@@ -30,24 +12,29 @@ class Clues extends React.Component {
       display: 'inline-block',
       verticalAlign: 'top',
       margin: 20,
-      maxWidth: '40%',
+      // maxWidth: '50%',
+    }
+
+    const seperatorStyle = {
+      display: 'inline-block',
+      width: 30
     }
 
     return (
       <Card style={cardStyle}>
         <CardTitle title="Clues"/>
         <CardText>
-          {
-            clueData.map((c, i) => {
-              return (
-                <ClueSection
-                  key={i}
-                  heading={c.heading}
-                  data={c.data}
-                />
-              )
-            })
-          }
+          <ClueSection
+            key={ORIENTATION.HORIZONTAL + ' clue section'}
+            heading={ORIENTATION.HORIZONTAL}
+            data={crosswordStore.getHorizontalWords()}
+          />
+          <div style={seperatorStyle}></div>
+          <ClueSection
+            key={ORIENTATION.VERTICAL + ' clue section'}
+            heading={ORIENTATION.VERTICAL}
+            data={crosswordStore.getVerticalWords()}
+          />
         </CardText>
       </Card>
     )

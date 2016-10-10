@@ -1,6 +1,19 @@
 import { EventEmitter } from 'events'
 import dispatcher from '../dispatcher/dispatcher'
-import { ACTION } from '../constants'
+import { ACTION, ORIENTATION, BLACK_CELL_PLACEHOLDER } from '../constants'
+import utf8 from 'utf8'
+import base64 from 'base-64'
+
+// const puzzle = [
+//   t o d a y _ _ _
+//   _ _ o _ _ f _ _
+//   c h i l d r e n
+//   _ e n _ _ i _ _
+//   _ l g _ _ e _ _
+//   _ l _ _ _ n _ _
+//   w o r l d d _ _
+// ]
+
 
 class CrosswordStore extends EventEmitter {
   constructor() {
@@ -10,29 +23,119 @@ class CrosswordStore extends EventEmitter {
       {
         number: 1,
         word: 'hello',
-        clue: 'A friendly greeting'
+        clue: 'A friendly greeting',
+        orientation: ORIENTATION.VERTICAL,
+        startCell: {
+          row: 2,
+          col: 1
+        }
       }, {
         number: 2,
         word: 'world',
-        clue: 'Also known as Earth'
+        clue: 'Also known as Earth',
+        orientation: ORIENTATION.HORIZONTAL,
+        startCell: {
+          row: 6,
+          col: 0
+        }
       }, {
         number: 3,
         word: 'children',
-        clue: 'Miniature people'
+        clue: 'Miniature people',
+        orientation: ORIENTATION.HORIZONTAL,
+        startCell: {
+          row: 2,
+          col: 0
+        }
       }, {
         number: 4,
         word: 'doing',
-        clue: 'Taking action'
+        clue: 'Taking action',
+        orientation: ORIENTATION.VERTICAL,
+        startCell: {
+          row: 0,
+          col: 2
+        }
       }, {
         number: 5,
         word: 'today',
-        clue: 'The present'
+        clue: 'The present',
+        orientation: ORIENTATION.HORIZONTAL,
+        startCell: {
+          row: 0,
+          col: 0
+        }
       }, {
         number: 6,
         word: 'friend',
-        clue: 'A family member you can pick'
+        clue: 'A family member you can pick',
+        orientation: ORIENTATION.VERTICAL,
+        startCell: {
+          row: 1,
+          col: 5
+        }
       }
     ]
+  }
+
+  dataString() {
+    return base64.encode(utf8.encode(JSON.stringify(this.words)))
+  }
+
+  makeGrid() {
+    let height = this.calcHeight()
+    let width = this.calcWidth()
+    let grid = Array.from(Array(height))
+            .map((row) => {
+              return Array.from(Array(width))
+                .map((col) => {
+                  return {
+                    char: BLACK_CELL_PLACEHOLDER
+                  }
+                })
+            })
+
+    this.getHorizontalWords().forEach((w) => {
+      Array.from(w.word).forEach((c, i) => {
+        grid[w.startCell.row][w.startCell.col + i] = {
+          char: c,
+          number: i === 0 ? w.number : undefined
+        }
+      })
+    })
+
+    this.getVerticalWords().forEach((w) => {
+      Array.from(w.word).forEach((c, i) => {
+        grid[w.startCell.row + i][w.startCell.col] = {
+          char: c,
+          number: i === 0 ? w.number : undefined
+        }
+      })
+    })
+
+    return grid
+  }
+
+  calcHeight() {
+    let maxHorizontal = this.getHorizontalWords()
+              .reduce((t, c) => (t < c.startCell.row ? c.startCell.row : t), 0)
+    let maxVertical = this.getVerticalWords()
+              .reduce((t, c) => {
+                let lastCharIdx = c.startCell.row + c.word.length - 1
+                return t < lastCharIdx ? lastCharIdx : t
+              }, 0)
+    return Math.max(maxVertical, maxHorizontal) + 1
+  }
+
+  calcWidth() {
+    let maxVertical = this.getVerticalWords()
+              .reduce((t, c) => (t < c.startCell.col ? c.startCell.col : t), 0)
+    let maxHorizontal = this.getHorizontalWords()
+              .reduce((t, c) => {
+                let lastCharIdx = c.startCell.col + c.word.length - 1
+                return t < lastCharIdx ? lastCharIdx : t
+              }, 0)
+    return Math.max(maxVertical, maxHorizontal) + 1
   }
 
   addWord(word={word:'',clue:''}) {
@@ -84,6 +187,14 @@ class CrosswordStore extends EventEmitter {
 
   getAllWords() {
     return this.words
+  }
+
+  getHorizontalWords() {
+    return this.words.filter((w) => w.orientation === ORIENTATION.HORIZONTAL)
+  }
+
+  getVerticalWords() {
+    return this.words.filter((w) => w.orientation === ORIENTATION.VERTICAL)
   }
 
   handleActions(action) {

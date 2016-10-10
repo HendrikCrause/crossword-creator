@@ -4,8 +4,14 @@ import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColu
 
 class ClueSection extends React.Component {
   render() {
+    const style = {
+      display: 'inline-block',
+      verticalAlign: 'top',
+      // width: '45%'
+    }
+
     return (
-      <div>
+      <div style={style}>
         <SubHeader>{this.props.heading}</SubHeader>
         <Table selectable={false} style={{width: 'inherited'}}>
           <TableBody displayRowCheckbox={false}>
