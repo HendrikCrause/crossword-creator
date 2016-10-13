@@ -9,45 +9,28 @@ import { APP_NAME } from '../constants'
 
 class Layout extends React.Component {
 
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      headerHeight: 0,
-      footerHeight: 0
-    }
-    console.log('Window:', window.innerHeight)
-  }
-
-  updateHeaderHeight(height) {
-    console.log('Header:', height)
-    this.setState({
-      headerHeight: height,
-      footerHeight: this.state.footerHeight
-    })
-  }
-
-  updateFooterHeight(height) {
-    console.log('Footer:', height)
-    this.setState({
-      headerHeight: this.state.headerHeight,
-      footerHeight: height
-    })
-  }
-
   render() {
+
+    const hfStyle = {
+      flex: 'none'
+    }
+
+    const contentStyle = {
+      flex: 1
+    }
+
+    const containerStyle = {
+      display: 'flex',
+      minHeight: window.innerHeight,
+      flexDirection: 'column'
+    }
+
     return (
-      <div>
+      <div style={containerStyle}>
         <DocumentTitle title={APP_NAME}/>
-        <ReactHeight onHeightReady={this.updateHeaderHeight.bind(this)}>
-          <Header/>
-        </ReactHeight>
-
-        <Content minHeight={window.innerHeight - (2 * this.state.headerHeight) - this.state.footerHeight} />
-
-        <ReactHeight onHeightReady={this.updateFooterHeight.bind(this)}>
-          <Footer/>
-        </ReactHeight>
+        <Header style={hfStyle}/>
+        <Content style={contentStyle}/>
+        <Footer style={hfStyle}/>
       </div>
     )
   }
