@@ -37,7 +37,7 @@ class Block extends React.Component {
         <TextField
           style={fieldStyle}
           inputStyle={{textAlign: 'center'}}
-          defaultValue={this.props.value}
+          defaultValue={ this.props.empty ? '' : this.props.value }
           underlineStyle={{width: '90%'}}
           id={this.props.idx}
         />

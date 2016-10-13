@@ -6,12 +6,6 @@ import Paper from 'material-ui/Paper'
 import { BLOCK_SIZE, BLACK_CELL_PLACEHOLDER } from '../../constants'
 import crosswordStore from '../../store/crosswordstore'
 
-const puzzle = [
-  ['a', 'b', '#'],
-  ['#', '1', ''],
-  ['', '#', '#']
-]
-
 class Crossword extends React.Component {
 
   constructor(props) {
@@ -20,6 +14,21 @@ class Crossword extends React.Component {
     this.state = {
       grid: crosswordStore.makeGrid()
     }
+    this.resetState = this.resetState.bind(this)
+  }
+
+  resetState() {
+    this.setState({
+      grid: crosswordStore.makeGrid()
+    })
+  }
+
+  componentWillMount() {
+    crosswordStore.on('change', this.resetState)
+  }
+
+  componentWillUnmount() {
+    crosswordStore.removeListener('change', this.resetState)
   }
 
   render() {
@@ -43,7 +52,16 @@ class Crossword extends React.Component {
                     if(col.char === BLACK_CELL_PLACEHOLDER){
                       return (<DisabledBlock key={key} size={BLOCK_SIZE} />)
                     }
-                    return (<Block key={key} idx={key} value={col.char} size={BLOCK_SIZE} number={col.number} />)
+                    return (
+                      <Block
+                        key={key}
+                        idx={key}
+                        value={col.char}
+                        size={BLOCK_SIZE}
+                        number={col.number}
+                        empty={this.props.empty}
+                      />
+                    )
                   })
                 }
               </Paper>

@@ -7,6 +7,32 @@ import crosswordStore from '../../store/crosswordstore'
 import { ORIENTATION } from '../../constants'
 
 class Clues extends React.Component {
+
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      horizontal: crosswordStore.getHorizontalWords(),
+      vertical: crosswordStore.getVerticalWords()
+    }
+    this.resetState = this.resetState.bind(this)
+  }
+
+  resetState() {
+    this.setState({
+      horizontal: crosswordStore.getHorizontalWords(),
+      vertical: crosswordStore.getVerticalWords()
+    })
+  }
+
+  componentWillMount() {
+    crosswordStore.on('change', this.resetState)
+  }
+
+  componentWillUnmount() {
+    crosswordStore.removeListener('change', this.resetState)
+  }
+
   render() {
     const cardStyle = {
       display: 'inline-block',
@@ -27,13 +53,13 @@ class Clues extends React.Component {
           <ClueSection
             key={ORIENTATION.HORIZONTAL + ' clue section'}
             heading={ORIENTATION.HORIZONTAL}
-            data={crosswordStore.getHorizontalWords()}
+            data={this.state.horizontal}
           />
           <div style={seperatorStyle}></div>
           <ClueSection
             key={ORIENTATION.VERTICAL + ' clue section'}
             heading={ORIENTATION.VERTICAL}
-            data={crosswordStore.getVerticalWords()}
+            data={this.state.vertical}
           />
         </CardText>
       </Card>

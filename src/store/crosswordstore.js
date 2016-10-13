@@ -78,8 +78,17 @@ class CrosswordStore extends EventEmitter {
     ]
   }
 
-  dataString() {
+  getInnerData() {
     return base64.encode(utf8.encode(JSON.stringify(this.words)))
+  }
+
+  decode(base) {
+    return JSON.parse(utf8.decode(base64.decode(base)))
+  }
+
+  setInnerData(base64Data) {
+    this.words = this.decode(base64Data)
+    this.emit('change')
   }
 
   makeGrid() {

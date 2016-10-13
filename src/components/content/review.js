@@ -1,8 +1,8 @@
 import React from 'react'
+
 import Crossword from '../crossword/crossword'
 import Clues from '../clues/clues'
-
-import crosswordStore from '../../store/crosswordstore'
+import ShareUrl from './shareurl'
 
 class Review extends React.Component {
 
@@ -11,7 +11,7 @@ class Review extends React.Component {
       <div>
           <Crossword />
           <Clues />
-          <p>{crosswordStore.dataString()}</p>
+          <ShareUrl />
       </div>
     )
   }
