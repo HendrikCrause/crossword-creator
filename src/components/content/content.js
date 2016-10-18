@@ -9,8 +9,7 @@ class Content extends React.Component {
   render() {
     const style = {
       width: '90%',
-      margin: 'auto',
-      minHeight: 524//this.props.minHeight
+      margin: 'auto'
     }
 
     return (

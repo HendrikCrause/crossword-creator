@@ -4,6 +4,39 @@ import TextField from 'material-ui/TextField'
 import Paper from 'material-ui/Paper'
 
 class Block extends React.Component {
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      value: this.props.empty ? '' : this.props.value
+    }
+  }
+
+  componentDidUpdate() {
+    this.handleFocus()
+  }
+
+  componentDidMount() {
+    this.handleFocus()
+  }
+
+  handleFocus() {
+    if(this.input && this.props.focus) {
+      this.input.focus()
+      console.log(this.input);
+      let val = this.input.input.value
+      this.input.input.selectionStart = 0
+      this.input.input.selectionEnd = 0
+    }
+  }
+
+  handleChange(event) {
+    this.setState({
+      value: event.target.value.substr(event.target.value.length - 1)
+    })
+    this.props.goToNextBlock(this.props.idx)
+  }
+
   render() {
     const fieldStyle = {
       backgroundColor: colors.canvasColor,
@@ -37,9 +70,11 @@ class Block extends React.Component {
         <TextField
           style={fieldStyle}
           inputStyle={{textAlign: 'center'}}
-          defaultValue={ this.props.empty ? '' : this.props.value }
           underlineStyle={{width: '90%'}}
           id={this.props.idx}
+          value={this.state.value}
+          onChange={this.handleChange.bind(this)}
+          ref={(input) => this.input = input }
         />
       </Paper>
     )

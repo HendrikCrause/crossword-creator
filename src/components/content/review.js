@@ -11,7 +11,7 @@ class Review extends React.Component {
       <div>
           <Crossword />
           <Clues />
-          <ShareUrl />
+          <ShareUrl handlePrev={this.props.handlePrev}/>
       </div>
     )
   }

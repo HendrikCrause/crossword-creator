@@ -78,6 +78,16 @@ class CrosswordStore extends EventEmitter {
     ]
   }
 
+  getStartingCell() {
+    if(!this.words || this.words.length === 0) {
+      return {
+        row: 0,
+        col: 0
+      }
+    }
+    return this.words[0].startCell
+  }
+
   getInnerData() {
     return base64.encode(utf8.encode(JSON.stringify(this.words)))
   }

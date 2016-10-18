@@ -8,7 +8,7 @@ import { narrowStyle } from './styles'
 class ButtonRow extends React.Component {
   render() {
     return (
-      <TableRow>
+      <TableRow displayBorder={false}>
         <TableRowColumn style={narrowStyle}></TableRowColumn>
         <TableRowColumn>
           <RaisedButton

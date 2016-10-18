@@ -7,10 +7,17 @@ export const ACTION = {
 }
 
 export const ORIENTATION = {
-  VERTICAL: 'Vertical',
+    VERTICAL: 'Vertical',
   HORIZONTAL: 'Horizontal'
 }
 
 export const BLOCK_SIZE = 40
 
 export const BLACK_CELL_PLACEHOLDER = '#'
+
+export const DIRECTION = {
+     UP: { row: -1, col:  0 },
+   DOWN: { row:  1, col:  0 },
+   LEFT: { row:  0, col: -1 },
+  RIGHT: { row:  0, col:  1 }
+}

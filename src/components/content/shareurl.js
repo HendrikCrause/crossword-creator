@@ -1,12 +1,14 @@
 import React from 'react'
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import TextField from 'material-ui/TextField'
+import FlatButton from 'material-ui/FlatButton'
 import RaisedButton from 'material-ui/RaisedButton'
-import ContentCopy from 'material-ui/svg-icons/content/content-copy'
-import ActionDone from 'material-ui/svg-icons/action/done'
 import CopyToClipboard from 'react-copy-to-clipboard'
 import Chip from 'material-ui/Chip'
 import Avatar from 'material-ui/Avatar'
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
+
+import ActionDone from 'material-ui/svg-icons/action/done'
+import ContentCopy from 'material-ui/svg-icons/content/content-copy'
 
 import crosswordStore from '../../store/crosswordstore'
 
@@ -58,6 +60,13 @@ class ShareUrl extends React.Component {
           name='url'
           value={this.makeUrl()}
           fullWidth={true}
+        />
+        <FlatButton
+          label="Back"
+          disableTouchRipple={true}
+          disableFocusRipple={true}
+          onTouchTap={this.props.handlePrev}
+          style={{marginRight:12}}
         />
         <CopyToClipboard
             text={this.makeUrl()}
