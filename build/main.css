@@ -8,6 +8,27 @@ body {
   margin: 0;
   padding: 0;
 }
+
+.slide-enter {
+  max-width: 1px;
+  overflow-x: hidden;
+}
+
+.slide-enter.slide-enter-active {
+  max-width: 100px;
+  transition: all 500ms;
+}
+
+.slide-leave {
+  max-width: 100px;
+  overflow-x: hidden;
+}
+
+.slide-leave.slide-leave-active {
+  max-width: 1px;
+  overflow-x: hidden;
+  transition: all 500ms;
+}
 @font-face {
   font-family: "Roboto";
   src: url(/build./fonts/roboto-thin-webfont.eot);
