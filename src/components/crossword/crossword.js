@@ -13,7 +13,9 @@ class Crossword extends React.Component {
 
     this.state = {
       grid: crosswordStore.makeGrid(),
-      focus: crosswordStore.getStartingCell()
+      focus: crosswordStore.getStartingCell(),
+      words: crosswordStore.getAllWords(),
+      currentWord: crosswordStore.getFirstWord()
     }
     this.resetState = this.resetState.bind(this)
     this.handleKeyPress = this.handleKeyPress.bind(this)
@@ -22,7 +24,9 @@ class Crossword extends React.Component {
   resetState() {
     this.setState({
       grid: crosswordStore.makeGrid(),
-      focus: this.state.focus
+      focus: this.state.focus,
+      words: crosswordStore.getAllWords(),
+      currentWord: this.state.currentWord
     })
   }
 
@@ -37,23 +41,15 @@ class Crossword extends React.Component {
   }
 
   handleKeyPress(event) {
-    switch (event.key) {
-      case 'ArrowLeft':
-        this.incrementFocus(DIRECTION.LEFT)
-        event.preventDefault()
-        break
-      case 'ArrowRight':
-        this.incrementFocus(DIRECTION.RIGHT)
-        event.preventDefault()
-        break
-      case 'ArrowUp':
-        this.incrementFocus(DIRECTION.UP)
-        event.preventDefault()
-        break
-      case 'ArrowDown':
-        this.incrementFocus(DIRECTION.DOWN)
-        event.preventDefault()
-        break
+    const keys = {
+      'ArrowRight': DIRECTION.RIGHT,
+       'ArrowLeft': DIRECTION.LEFT,
+       'ArrowDown': DIRECTION.DOWN,
+         'ArrowUp': DIRECTION.UP
+    }
+    if(keys[event.key]){
+      event.preventDefault()
+      this.incrementFocus(keys[event.key])
     }
   }
 
@@ -66,10 +62,22 @@ class Crossword extends React.Component {
 
   incrementFocus(dir) {
     let newFocus = this.incrementCell(this.state.focus, dir)
-    if(this.characterAtCell(newFocus) !== BLACK_CELL_PLACEHOLDER) {
+    this.focusOnCell(newFocus)
+  }
+
+  focusOnBlock(idx) {
+    let newFocus = this.idToCell(idx)
+    this.focusOnCell(newFocus)
+  }
+
+  focusOnCell(cell) {
+    if(this.characterAtCell(cell) !== BLACK_CELL_PLACEHOLDER) {
+      let wordsAtCell = crosswordStore.wordsAtCell(cell)
+      // let flag = wordsAtCell.filter()
+      // console.log(wordsAtCell);
       this.setState({
-        grid: this.state.grid,
-        focus: newFocus
+        ...this.state,
+        focus: cell
       })
     }
   }
@@ -91,6 +99,8 @@ class Crossword extends React.Component {
 
   goToNextBlock(idx) {
     let cell = this.idToCell(idx)
+
+
 
     if(this.characterAtCell(this.incrementCell(cell, DIRECTION.RIGHT))
         !== BLACK_CELL_PLACEHOLDER) {
@@ -130,7 +140,8 @@ class Crossword extends React.Component {
                         size={BLOCK_SIZE}
                         number={col.number}
                         empty={this.props.empty}
-                        goToNextBlock={this.goToNextBlock.bind(this)}
+                        goToNextBlock={() => this.goToNextBlock(key)}
+                        focusOnBlock={() => this.focusOnBlock(key)}
                         focus={this.state.focus.row === j && this.state.focus.col === i}
                       />
                     )

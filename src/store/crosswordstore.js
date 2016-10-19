@@ -1,6 +1,6 @@
 import { EventEmitter } from 'events'
 import dispatcher from '../dispatcher/dispatcher'
-import { ACTION, ORIENTATION, BLACK_CELL_PLACEHOLDER } from '../constants'
+import { ACTION, ORIENTATION, BLACK_CELL_PLACEHOLDER, DIRECTION } from '../constants'
 import utf8 from 'utf8'
 import base64 from 'base-64'
 
@@ -78,6 +78,40 @@ class CrosswordStore extends EventEmitter {
     ]
   }
 
+  wordsAtCell(cell) {
+    return this.words.filter((w) => {
+      return Array.from(w.word)
+        .map((char, i) => {
+          let dir = this.directionForOrientation(w.orientation)
+          return {
+            row: w.startCell.row + dir.row * i,
+            col: w.startCell.col + dir.col * i
+          }
+        })
+        .filter((c) => c.row === cell.row && c.col === cell.col)
+        .length !== 0
+    })
+  }
+
+  directionForOrientation(orientation) {
+    if(orientation === ORIENTATION.VERTICAL) {
+      return DIRECTION.DOWN
+    }
+    if(orientation === ORIENTATION.HORIZONTAL) {
+      return DIRECTION.RIGHT
+    }
+    throw "Unknown orientation: " + orientation
+  }
+
+  getTypingDirection() {
+    if(!this.words
+      || this.words.length === 0
+      || this.words[0].orientation === ORIENTATION.HORIZONTAL) {
+      return DIRECTION.RIGHT
+    }
+    return DIRECTION.DOWN
+  }
+
   getStartingCell() {
     if(!this.words || this.words.length === 0) {
       return {
@@ -86,6 +120,13 @@ class CrosswordStore extends EventEmitter {
       }
     }
     return this.words[0].startCell
+  }
+
+  getFirstWord() {
+    if(!this.words || this.words.length === 0) {
+      return null
+    }
+    return this.words[0]
   }
 
   getInnerData() {
@@ -105,14 +146,14 @@ class CrosswordStore extends EventEmitter {
     let height = this.calcHeight()
     let width = this.calcWidth()
     let grid = Array.from(Array(height))
-            .map((row) => {
-              return Array.from(Array(width))
-                .map((col) => {
-                  return {
-                    char: BLACK_CELL_PLACEHOLDER
-                  }
-                })
-            })
+      .map((row) => {
+        return Array.from(Array(width))
+          .map((col) => {
+            return {
+              char: BLACK_CELL_PLACEHOLDER
+            }
+          })
+      })
 
     this.getHorizontalWords().forEach((w) => {
       Array.from(w.word).forEach((c, i) => {
@@ -235,5 +276,4 @@ const crosswordStore = new CrosswordStore
 dispatcher.register(crosswordStore.handleActions.bind(crosswordStore))
 
 window.crosswordStore = crosswordStore
-window.dispatcher = dispatcher
 export default crosswordStore

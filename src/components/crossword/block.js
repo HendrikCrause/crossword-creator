@@ -23,10 +23,6 @@ class Block extends React.Component {
   handleFocus() {
     if(this.input && this.props.focus) {
       this.input.focus()
-      console.log(this.input);
-      let val = this.input.input.value
-      this.input.input.selectionStart = 0
-      this.input.input.selectionEnd = 0
     }
   }
 
@@ -34,7 +30,7 @@ class Block extends React.Component {
     this.setState({
       value: event.target.value.substr(event.target.value.length - 1)
     })
-    this.props.goToNextBlock(this.props.idx)
+    this.props.goToNextBlock()
   }
 
   render() {
@@ -74,6 +70,7 @@ class Block extends React.Component {
           id={this.props.idx}
           value={this.state.value}
           onChange={this.handleChange.bind(this)}
+          onTouchTap={this.props.focusOnBlock}
           ref={(input) => this.input = input }
         />
       </Paper>
