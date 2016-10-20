@@ -28,9 +28,22 @@ class Block extends React.Component {
 
   handleChange(event) {
     this.setState({
-      value: event.target.value.substr(event.target.value.length - 1)
+      value: this.determineNewCharacter(event.target.value)
     })
     this.props.goToNextBlock()
+  }
+
+  determineNewCharacter(value) {
+    if(!value) {
+      return ''
+    }
+    if(this.state.value === value) {
+      return value
+    }
+    if(this.state.value === value[0]) {
+      return value[value.length - 1]
+    }
+    return value[0]
   }
 
   render() {

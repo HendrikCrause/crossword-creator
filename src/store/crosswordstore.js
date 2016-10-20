@@ -129,6 +129,16 @@ class CrosswordStore extends EventEmitter {
     return this.words[0]
   }
 
+  nextWord(word=null) {
+    if(!word) {
+      return this.getFirstWord()
+    }
+    const higherWords = this.words.filter((w) => w.number > word.number)
+    let out = higherWords.length > 0 ? higherWords[0] : this.getFirstWord()
+    console.log(out);
+    return out
+  }
+
   getInnerData() {
     return base64.encode(utf8.encode(JSON.stringify(this.words)))
   }
