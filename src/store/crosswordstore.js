@@ -134,9 +134,7 @@ class CrosswordStore extends EventEmitter {
       return this.getFirstWord()
     }
     const higherWords = this.words.filter((w) => w.number > word.number)
-    let out = higherWords.length > 0 ? higherWords[0] : this.getFirstWord()
-    console.log(out);
-    return out
+    return higherWords.length > 0 ? higherWords[0] : this.getFirstWord()
   }
 
   getInnerData() {

@@ -14,6 +14,9 @@ class Block extends React.Component {
 
   componentDidUpdate() {
     this.handleFocus()
+    if(this.determineError) {
+      this.props.addError(this.props.idx)
+    }
   }
 
   componentDidMount() {
@@ -46,9 +49,20 @@ class Block extends React.Component {
     return value[0]
   }
 
+  determineError() {
+    if(this.props.check
+        && this.input
+        && this.input.input.value !== this.props.value){
+      return ' '
+    }
+    return null
+  }
+
   render() {
+    const error = this.determineError()
+    const color = error !== null ? colors.ui.redA100 : colors.canvasColor
     const fieldStyle = {
-      backgroundColor: colors.canvasColor,
+      backgroundColor: color,
       color: colors.textColor,
       borderColor: colors.borderColor,
       borderWidth: 1,
@@ -68,10 +82,15 @@ class Block extends React.Component {
       color: colors.disabledColor
     }
 
+    const paperStyle = {
+      display: 'inline-block',
+      position: 'relative',
+    }
+
     return (
       <Paper
         zDepth={0}
-        style={{display: 'inline-block', position: 'relative'}}
+        style={paperStyle}
       >
         {
           this.props.number ? (<p style={numberStyle}>{this.props.number}</p>) : ''
@@ -85,6 +104,7 @@ class Block extends React.Component {
           onChange={this.handleChange.bind(this)}
           onTouchTap={this.props.focusOnBlock}
           ref={(input) => this.input = input }
+          errorText={error}
         />
       </Paper>
     )

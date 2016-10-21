@@ -46,7 +46,12 @@ class Crossword extends React.Component {
          'ArrowUp': DIRECTION.UP
     }
     if(keys[event.key]){
+      event.preventDefault()
       this.incrementFocus(keys[event.key])
+    }
+    if(event.key === 'Tab') {
+      event.preventDefault()
+      this.goToNextBlock()
     }
   }
 
@@ -75,7 +80,6 @@ class Crossword extends React.Component {
         focus: nextWord.startCell,
         currentWord: nextWord
       })
-      console.log('Blank Cell:',this.state.currentWord.word);
       return
     }
 
@@ -86,7 +90,6 @@ class Crossword extends React.Component {
         focus: cell,
         currentWord: wordsAtCell[0]
       })
-      console.log('Only one word:',this.state.currentWord.word);
       return
     }
 
@@ -98,7 +101,6 @@ class Crossword extends React.Component {
         ...this.state,
         focus: cell
       })
-      console.log('Already on word', this.state.currentWord.word);
       return
     }
 
@@ -109,7 +111,6 @@ class Crossword extends React.Component {
         focus: cell,
         currentWord: atFirstChar[0]
       })
-      console.log('Starting cell of word:', this.state.currentWord.word);
       return
     }
 
@@ -118,13 +119,12 @@ class Crossword extends React.Component {
       focus: cell,
       currentWord: wordsAtCell[0]
     })
-    console.log('Default word:', this.state.currentWord.word);
   }
 
   characterAtCell(cell) {
     if(cell
-        && cell.row > -1
-        && cell.col > -1
+        && cell.row > -1 && cell.row < this.state.grid.length
+        && cell.col > -1 && cell.col < this.state.grid[cell.row].length
         && this.state.grid[cell.row][cell.col]) {
       return this.state.grid[cell.row][cell.col].char
     }
@@ -143,18 +143,9 @@ class Crossword extends React.Component {
     return c1.row === c2.row && c1.col === c2.col
   }
 
-  goToNextBlock(idx) {
-    const cell = this.idToCell(idx)
+  goToNextBlock() {
     const dir = crosswordStore.directionForOrientation(this.state.currentWord.orientation)
     this.incrementFocus(dir)
-
-    // if(this.characterAtCell(this.incrementCell(cell, DIRECTION.RIGHT))
-    //     !== BLACK_CELL_PLACEHOLDER) {
-    //   this.incrementFocus(DIRECTION.RIGHT)
-    // } else if(this.characterAtCell(this.incrementCell(cell, DIRECTION.DOWN))
-    //     !== BLACK_CELL_PLACEHOLDER){
-    //   this.incrementFocus(DIRECTION.DOWN)
-    // }
   }
 
   render() {
@@ -189,6 +180,8 @@ class Crossword extends React.Component {
                         goToNextBlock={() => this.goToNextBlock(key)}
                         focusOnBlock={() => this.focusOnBlock(key)}
                         focus={this.state.focus.row === j && this.state.focus.col === i}
+                        check={this.props.check}
+                        addError={this.props.addError}
                       />
                     )
                   })

@@ -16,6 +16,7 @@ const colors = {
     pickerHeaderColor: ui.amber500,
     clockCircleColor: fade(ui.darkBlack, 0.07),
     shadowColor: ui.fullBlack,
+    ui: ui
 }
 
 export default colors

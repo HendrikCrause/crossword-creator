@@ -44,7 +44,7 @@ class ShareUrl extends React.Component {
       data: this.state.data,
       copied: true
     })
-    window.setTimeout(this.resetState, 3000);
+    window.setTimeout(this.resetState, 3000)
   }
 
   makeUrl() {
