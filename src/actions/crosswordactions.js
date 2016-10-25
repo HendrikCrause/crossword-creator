@@ -22,3 +22,11 @@ export function updateWord(number, word) {
     number
   })
 }
+
+export function enterCharacter(cell, value) {
+  dispatcher.dispatch({
+    type: ACTION.ENTER_CHARACTER,
+    cell,
+    value
+  })
+}

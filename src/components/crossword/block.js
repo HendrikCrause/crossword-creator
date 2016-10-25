@@ -3,6 +3,9 @@ import colors from '../../theme/colors'
 import TextField from 'material-ui/TextField'
 import Paper from 'material-ui/Paper'
 
+import * as Actions from '../../actions/crosswordactions'
+import { idToCell } from '../../util/util'
+
 class Block extends React.Component {
 
   constructor(props) {
@@ -14,9 +17,6 @@ class Block extends React.Component {
 
   componentDidUpdate() {
     this.handleFocus()
-    if(this.determineError) {
-      this.props.addError(this.props.idx)
-    }
   }
 
   componentDidMount() {
@@ -30,8 +30,11 @@ class Block extends React.Component {
   }
 
   handleChange(event) {
+    const newChar = this.determineNewCharacter(event.target.value)
+    Actions.enterCharacter(idToCell(this.props.idx), newChar)
+
     this.setState({
-      value: this.determineNewCharacter(event.target.value)
+      value: newChar
     })
     this.props.goToNextBlock()
   }

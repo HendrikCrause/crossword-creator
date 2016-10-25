@@ -4,6 +4,8 @@ import { ACTION, ORIENTATION, BLACK_CELL_PLACEHOLDER, DIRECTION } from '../const
 import utf8 from 'utf8'
 import base64 from 'base-64'
 
+import { pretty } from '../util/util'
+
 // const puzzle = [
 //   t o d a y _ _ _
 //   _ _ o _ _ f _ _
@@ -76,6 +78,12 @@ class CrosswordStore extends EventEmitter {
         }
       }
     ]
+
+    this.currentGrid = this.makeGrid().map((row) => {
+      return row.map((col) => {
+        return col.char === BLACK_CELL_PLACEHOLDER ? col.char : ''
+      })
+    })
   }
 
   wordsAtCell(cell) {
@@ -265,6 +273,19 @@ class CrosswordStore extends EventEmitter {
     return this.words.filter((w) => w.orientation === ORIENTATION.VERTICAL)
   }
 
+  enterCharacter(cell, value) {
+    this.currentGrid[cell.row][cell.col] = value
+  }
+
+  hasErrors() {
+    return this.makeGrid()
+             .some((row, i) =>
+                row.some((col, j) =>
+                  col.char !== this.currentGrid[i][j]
+                )
+              )
+  }
+
   handleActions(action) {
     switch (action.type) {
       case ACTION.ADD_WORD:
@@ -275,6 +296,9 @@ class CrosswordStore extends EventEmitter {
         break
       case ACTION.UPDATE_WORD:
         this.updateWord(action.number, action.word)
+        break
+      case ACTION.ENTER_CHARACTER:
+        this.enterCharacter(action.cell, action.value)
         break
     }
   }
