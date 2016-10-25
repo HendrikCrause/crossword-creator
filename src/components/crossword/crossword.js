@@ -30,12 +30,12 @@ class Crossword extends React.Component {
 
   componentWillMount() {
     crosswordStore.on('change', this.resetState)
-    window.addEventListener('keydown', this.handleKeyPress)
+    window.addEventListener('keyup', this.handleKeyPress)
   }
 
   componentWillUnmount() {
     crosswordStore.removeListener('change', this.resetState)
-    window.removeEventListener('keydown', this.handleKeyPress)
+    window.removeEventListener('keyup', this.handleKeyPress)
   }
 
   handleKeyPress(event) {
@@ -52,6 +52,9 @@ class Crossword extends React.Component {
     if(event.key === 'Tab') {
       event.preventDefault()
       this.goToNextBlock()
+    }
+    if(event.key === 'Backspace') {
+      this.goToPreviousBlock()
     }
   }
 
@@ -145,6 +148,11 @@ class Crossword extends React.Component {
 
   goToNextBlock() {
     const dir = crosswordStore.directionForOrientation(this.state.currentWord.orientation)
+    this.incrementFocus(dir)
+  }
+
+  goToPreviousBlock() {
+    const dir = crosswordStore.reverseDirectionForOrientation(this.state.currentWord.orientation)
     this.incrementFocus(dir)
   }
 

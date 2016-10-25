@@ -4,8 +4,6 @@ import { ACTION, ORIENTATION, BLACK_CELL_PLACEHOLDER, DIRECTION } from '../const
 import utf8 from 'utf8'
 import base64 from 'base-64'
 
-import { pretty } from '../util/util'
-
 // const puzzle = [
 //   t o d a y _ _ _
 //   _ _ o _ _ f _ _
@@ -107,6 +105,16 @@ class CrosswordStore extends EventEmitter {
     }
     if(orientation === ORIENTATION.HORIZONTAL) {
       return DIRECTION.RIGHT
+    }
+    throw "Unknown orientation: " + orientation
+  }
+
+  reverseDirectionForOrientation(orientation) {
+    if(orientation === ORIENTATION.VERTICAL) {
+      return DIRECTION.UP
+    }
+    if(orientation === ORIENTATION.HORIZONTAL) {
+      return DIRECTION.LEFT
     }
     throw "Unknown orientation: " + orientation
   }

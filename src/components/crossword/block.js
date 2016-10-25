@@ -36,7 +36,9 @@ class Block extends React.Component {
     this.setState({
       value: newChar
     })
-    this.props.goToNextBlock()
+    if(newChar !== '') {
+      this.props.goToNextBlock()
+    }
   }
 
   determineNewCharacter(value) {
