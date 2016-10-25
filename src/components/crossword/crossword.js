@@ -54,7 +54,9 @@ class Crossword extends React.Component {
       this.goToNextBlock()
     }
     if(event.key === 'Backspace') {
-      this.goToPreviousBlock()
+      if(!this.cellEquals(this.state.focus, this.state.currentWord.startCell)) {
+        this.goToPreviousBlock()
+      }
     }
   }
 
