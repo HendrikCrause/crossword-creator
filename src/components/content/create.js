@@ -5,6 +5,12 @@ import FlatButton from 'material-ui/FlatButton'
 import Editor from '../editor/editor'
 
 class Create extends React.Component {
+
+  handleGenerateButton() {
+    this.props.generate()
+    this.props.handleNext()
+  }
+
   render() {
     return (
       <div>
@@ -18,7 +24,7 @@ class Create extends React.Component {
         <RaisedButton
           label="Generate crossword"
           primary={true}
-          onTouchTap={this.props.handleNext}
+          onTouchTap={this.handleGenerateButton.bind(this)}
         />
       </div>
     )

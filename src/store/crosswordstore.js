@@ -153,6 +153,14 @@ class CrosswordStore extends EventEmitter {
     return higherWords.length > 0 ? higherWords[0] : this.getFirstWord()
   }
 
+  previousWord(word=null) {
+    if(!word) {
+      return this.getFirstWord()
+    }
+    const lowerWords = this.words.filter((w) => w.number < word.number)
+    return lowerWords.length > 0 ? lowerWords[lowerWords.length - 1] : this.words[this.words.length - 1]
+  }
+
   getInnerData() {
     return base64.encode(utf8.encode(JSON.stringify(this.words)))
   }

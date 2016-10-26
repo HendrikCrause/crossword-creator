@@ -30,6 +30,10 @@ class Flow extends React.Component {
       }
     }
 
+    generate() {
+      console.log('Generating crossword');
+    }
+
     render() {
       return (
         <div style={{
@@ -58,6 +62,7 @@ class Flow extends React.Component {
                 <Create
                   handleNext={this.handleNext.bind(this)}
                   handlePrev={this.handlePrev.bind(this)}
+                  generate={this.generate.bind(this)}
                 />
               </StepContent>
             </Step>
@@ -68,6 +73,7 @@ class Flow extends React.Component {
               <StepContent>
                 <Review
                   handlePrev={this.handlePrev.bind(this)}
+                  generate={this.generate.bind(this)}
                 />
               </StepContent>
             </Step>

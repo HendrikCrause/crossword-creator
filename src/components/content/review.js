@@ -1,4 +1,7 @@
 import React from 'react'
+import FlatButton from 'material-ui/FlatButton'
+
+import AvLoop from 'material-ui/svg-icons/av/loop'
 
 import Crossword from '../crossword/crossword'
 import Clues from '../clues/clues'
@@ -9,9 +12,18 @@ class Review extends React.Component {
   render() {
     return (
       <div>
-          <Crossword />
-          <Clues />
-          <ShareUrl handlePrev={this.props.handlePrev}/>
+        <div>
+          <FlatButton
+            label="Generate Different Crossword Puzzle"
+            disableTouchRipple={true}
+            disableFocusRipple={true}
+            onTouchTap={this.props.generate}
+            icon={<AvLoop/>}
+          />
+        </div>
+        <Crossword />
+        <Clues />
+        <ShareUrl handlePrev={this.props.handlePrev}/>
       </div>
     )
   }
