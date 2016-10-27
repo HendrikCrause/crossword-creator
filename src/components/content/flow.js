@@ -7,6 +7,8 @@ import Introduction from './introduction'
 import Create from './create'
 import Review from './review'
 
+import { generateCrossword } from '../../actions/crosswordactions'
+
 class Flow extends React.Component {
 
     constructor(props) {
@@ -31,7 +33,7 @@ class Flow extends React.Component {
     }
 
     generate() {
-      console.log('Generating crossword');
+      generateCrossword()
     }
 
     render() {

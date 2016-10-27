@@ -1,8 +1,10 @@
 import { EventEmitter } from 'events'
-import dispatcher from '../dispatcher/dispatcher'
-import { ACTION, ORIENTATION, BLACK_CELL_PLACEHOLDER, DIRECTION } from '../constants'
 import utf8 from 'utf8'
 import base64 from 'base-64'
+
+import dispatcher from '../dispatcher/dispatcher'
+import { ACTION, ORIENTATION, BLACK_CELL_PLACEHOLDER, DIRECTION, MAX_HEIGHT, MAX_WIDTH } from '../constants'
+import Board from '../generator/game'
 
 // const puzzle = [
 //   t o d a y _ _ _
@@ -302,6 +304,23 @@ class CrosswordStore extends EventEmitter {
               )
   }
 
+  generateNewCrossword() {
+    let board = new Board(MAX_HEIGHT, MAX_WIDTH)
+    board.computePuzzle(this.words.map((w) => w.word))
+    board.trimBoard()
+
+    this.words = this.words.map((w) => {
+      const matchingPlacement = board.placements.filter((p) => p.word === w.word)[0]
+      return {
+        ...w,
+        orientation: matchingPlacement.orientation,
+        startCell: matchingPlacement.startCell
+      }
+    })
+    console.log(this.words);
+    this.emit('change')
+  }
+
   handleActions(action) {
     switch (action.type) {
       case ACTION.ADD_WORD:
@@ -315,6 +334,9 @@ class CrosswordStore extends EventEmitter {
         break
       case ACTION.ENTER_CHARACTER:
         this.enterCharacter(action.cell, action.value)
+        break
+      case ACTION.GENERATE_CROSSWORD:
+        this.generateNewCrossword()
         break
     }
   }

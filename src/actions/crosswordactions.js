@@ -30,3 +30,9 @@ export function enterCharacter(cell, value) {
     value
   })
 }
+
+export function generateCrossword() {
+  dispatcher.dispatch({
+    type: ACTION.GENERATE_CROSSWORD
+  })
+}

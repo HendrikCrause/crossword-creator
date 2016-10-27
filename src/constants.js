@@ -4,12 +4,18 @@ export const ACTION = {
   ADD_WORD: 'ADD_WORD',
   REMOVE_WORD: 'REMOVE_WORD',
   UPDATE_WORD: 'UPDATE_WORD',
-  ENTER_CHARACTER: 'ENTER_CHARACTER'
+  ENTER_CHARACTER: 'ENTER_CHARACTER',
+  GENERATE_CROSSWORD: 'GENERATE_CROSSWORD'
 }
 
 export const ORIENTATION = {
     VERTICAL: 'Vertical',
-  HORIZONTAL: 'Horizontal'
+  HORIZONTAL: 'Horizontal',
+    OPPOSITE: function(o) {
+      if(o === this.VERTICAL) return this.HORIZONTAL
+      if(o === this.HORIZONTAL) return this.VERTICAL
+      return o
+    }
 }
 
 export const BLOCK_SIZE = 40
@@ -22,3 +28,6 @@ export const DIRECTION = {
    LEFT: { row:  0, col: -1 },
   RIGHT: { row:  0, col:  1 }
 }
+
+export const MAX_HEIGHT = 20
+export const MAX_WIDTH = 20

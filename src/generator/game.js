@@ -1,17 +1,11 @@
-'use strict'
-
-const direction = {
-  HORIZONTAL: 'horizontal',
-  VERTICAL: 'vertical'
-}
-
-const BLACK_CELL_PLACEHOLDER = '_'
+import { ORIENTATION, BLACK_CELL_PLACEHOLDER } from '../constants'
 
 class Board {
   constructor(height, width) {
     this.height = height
     this.width = width
     this.board = this.blankBoard()
+    this.placements = []
   }
 
   blankBoard() {
@@ -24,6 +18,7 @@ class Board {
   }
 
   computePuzzle(words) {
+    this.placements = []
     let sortedWords = this.sortByLength(words)
     sortedWords.every((w) => {
       let placement = this.suggestPlacement(w)
@@ -47,19 +42,19 @@ class Board {
       .map((c) => this.locationsOfChar(c))
 
     let horizontalSuggestions = matchingLocations.map((locations, index) =>
-      locations.map((loc) => this.findStartCell(index, loc, direction.HORIZONTAL))
-        .filter((loc) => this.canPlaceWord(word, loc, direction.HORIZONTAL))
+      locations.map((loc) => this.findStartCell(index, loc, ORIENTATION.HORIZONTAL))
+        .filter((loc) => this.canPlaceWord(word, loc, ORIENTATION.HORIZONTAL))
         .map((s) => {
-          s.dir = direction.HORIZONTAL
+          s.dir = ORIENTATION.HORIZONTAL
           return s
         })
     )
 
     let verticalSuggestions = matchingLocations.map((locations, index) =>
-      locations.map((loc) => this.findStartCell(index, loc, direction.VERTICAL))
-        .filter((loc) => this.canPlaceWord(word, loc, direction.VERTICAL))
+      locations.map((loc) => this.findStartCell(index, loc, ORIENTATION.VERTICAL))
+        .filter((loc) => this.canPlaceWord(word, loc, ORIENTATION.VERTICAL))
         .map((s) => {
-          s.dir = direction.VERTICAL
+          s.dir = ORIENTATION.VERTICAL
           return s
         })
     )
@@ -76,18 +71,22 @@ class Board {
   }
 
   findStartCell(charIndex, cell, dir) {
-    if(dir === direction.HORIZONTAL) {
+    return this.findCellAtIndex(0, cell, charIndex, dir)
+  }
+
+  findCellAtIndex(index, refCell, refIndex, dir) {
+    if(dir === ORIENTATION.HORIZONTAL) {
       return {
-        row: cell.row,
-        col: cell.col - charIndex
+        row: refCell.row,
+        col: refCell.col + index - refIndex
       }
-    } else if(dir === direction.VERTICAL) {
+    } else if(dir === ORIENTATION.VERTICAL) {
       return {
-        row: cell.row - charIndex,
-        col: cell.col
+        row: refCell.row + index - refIndex,
+        col: refCell.col
       }
     } else {
-      throw new Error('Unknown direction ' + dir)
+      throw new Error('Unknown orientation ' + dir)
     }
   }
 
@@ -98,43 +97,82 @@ class Board {
       iter += 1
 
       let cell = this.randomCell()
-      if(this.canPlaceWord(word, cell, direction.HORIZONTAL)) {
+      if(this.canPlaceWord(word, cell, ORIENTATION.HORIZONTAL)) {
         return {
           row: cell.row,
           col: cell.col,
-          dir: direction.HORIZONTAL
+          dir: ORIENTATION.HORIZONTAL
         }
-      } else if(this.canPlaceWord(word, cell, direction.VERTICAL)) {
+      } else if(this.canPlaceWord(word, cell, ORIENTATION.VERTICAL)) {
         return {
           row: cell.row,
           col: cell.col,
-          dir: direction.VERTICAL
+          dir: ORIENTATION.VERTICAL
         }
       }
     }
   }
 
-  placeWord(word, startCell, dir) {
+  placeWord(word, startCell, orientation) {
     const chars = Array.from(word)
     let cell = this.copyCell(startCell)
     chars.forEach((c) => {
       this.placeCharacter(c, cell)
-      cell = this.nextCell(cell, dir)
+      cell = this.nextCell(cell, orientation)
+    })
+    this.placements.push({
+      word,
+      startCell,
+      orientation
     })
   }
 
   canPlaceWord(word, startCell, dir) {
-    let cell = this.copyCell(startCell)
-    return Array.from(word).every((char) => {
-      if(this.charAt(cell) === null) {
+
+    const charPlacements = Array.from(word).map((char, i) => {
+      return {
+        char,
+        cell: this.findCellAtIndex(i, startCell, 0, dir)
+      }
+    })
+    const wordFits = charPlacements.every((placement) => {
+      const placedChar = this.charAt(placement.cell)
+      if(placedChar === null) {
         return false
       }
-      if(this.charAt(cell) !== BLACK_CELL_PLACEHOLDER && this.charAt(cell) !== char) {
+      if(placedChar !== BLACK_CELL_PLACEHOLDER && placedChar !== placement.char) {
         return false
       }
-      cell = this.nextCell(cell, dir)
+      const adjacentCell1 = this.findCellAtIndex(-1, placement.cell, 0, ORIENTATION.OPPOSITE(dir))
+      const adjacentCell2 = this.findCellAtIndex( 1, placement.cell, 0, ORIENTATION.OPPOSITE(dir))
+      if(placedChar === BLACK_CELL_PLACEHOLDER &&
+          (  this.charAt(adjacentCell1) !== BLACK_CELL_PLACEHOLDER
+          || this.charAt(adjacentCell2) !== BLACK_CELL_PLACEHOLDER)) {
+        return false
+      }
       return true
     })
+
+    const cellBefore = this.findCellAtIndex(-1, startCell, 0, dir)
+    const emptyBefore = this.charAt(cellBefore) === null || this.charAt(cellBefore) === BLACK_CELL_PLACEHOLDER
+
+    const cellAfter = this.findCellAtIndex(word.length, startCell, 0, dir)
+    const emptyAfter = this.charAt(cellAfter) === null || this.charAt(cellAfter) === BLACK_CELL_PLACEHOLDER
+
+    // let cell = this.copyCell(startCell)
+    //
+    // let wordFits = Array.from(word).every((char) => {
+    //   if(this.charAt(cell) === null) {
+    //     return false
+    //   }
+    //   if(this.charAt(cell) !== BLACK_CELL_PLACEHOLDER && this.charAt(cell) !== char) {
+    //     return false
+    //   }
+    //   cell = this.nextCell(cell, dir)
+    //   return true
+    // })
+
+    return wordFits && emptyBefore && emptyAfter
   }
 
   trimBoard() {
@@ -144,7 +182,6 @@ class Board {
 
   trimRows() {
     let rowsToRemove = []
-    let columnsToRemove = []
     this.board.forEach((row, index) => {
       if(this.containsOnlyBlackCells(row)) {
         rowsToRemove.push(index)
@@ -154,6 +191,7 @@ class Board {
   }
 
   trimColumns() {
+    let columnsToRemove = []
     Array.from(Array(this.width))
       .map((e, i) => this.getColumn(i))
       .forEach((col, index) => {
@@ -223,18 +261,18 @@ class Board {
   }
 
   nextCell(cell, dir) {
-    if (dir === direction.VERTICAL) {
+    if (dir === ORIENTATION.VERTICAL) {
       return {
         row: cell.row + 1,
         col: cell.col
       }
-    } else if(dir === direction.HORIZONTAL) {
+    } else if(dir === ORIENTATION.HORIZONTAL) {
       return {
         row: cell.row,
         col: cell.col + 1
       }
     } else {
-      throw new Error('Unknown direction ' + dir)
+      throw new Error('Unknown orientation ' + dir)
     }
   }
 
@@ -272,12 +310,4 @@ class Board {
   }
 }
 
-const HEIGHT = 10
-const WIDTH = 10
-const WORD_LIST = ['hello', 'world', 'how', 'are', 'the', 'children', 'doing', 'today', 'friend']
-
-let board = new Board(HEIGHT, WIDTH)
-board.computePuzzle(WORD_LIST)
-console.log(board.pretty())
-
-// console.log(board.canPlaceWord('hello', {row:0,col:13}, direction.HORIZONTAL))
+export default Board
