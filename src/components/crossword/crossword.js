@@ -6,6 +6,8 @@ import Paper from 'material-ui/Paper'
 import { BLOCK_SIZE, BLACK_CELL_PLACEHOLDER, DIRECTION } from '../../constants'
 import crosswordStore from '../../store/crosswordstore'
 
+import {pretty} from '../../util/util'
+
 class Crossword extends React.Component {
 
   constructor(props) {

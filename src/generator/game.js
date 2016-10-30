@@ -135,6 +135,7 @@ class Board {
         cell: this.findCellAtIndex(i, startCell, 0, dir)
       }
     })
+
     const wordFits = charPlacements.every((placement) => {
       const placedChar = this.charAt(placement.cell)
       if(placedChar === null) {
@@ -158,19 +159,6 @@ class Board {
 
     const cellAfter = this.findCellAtIndex(word.length, startCell, 0, dir)
     const emptyAfter = this.charAt(cellAfter) === null || this.charAt(cellAfter) === BLACK_CELL_PLACEHOLDER
-
-    // let cell = this.copyCell(startCell)
-    //
-    // let wordFits = Array.from(word).every((char) => {
-    //   if(this.charAt(cell) === null) {
-    //     return false
-    //   }
-    //   if(this.charAt(cell) !== BLACK_CELL_PLACEHOLDER && this.charAt(cell) !== char) {
-    //     return false
-    //   }
-    //   cell = this.nextCell(cell, dir)
-    //   return true
-    // })
 
     return wordFits && emptyBefore && emptyAfter
   }
@@ -222,6 +210,18 @@ class Board {
     }
     this.board.splice(index, 1)
     this.height -= 1
+    this.placements = this.placements.map((w) => {
+      if(w.startCell.row > index) {
+        return {
+          ...w,
+          startCell: {
+            ...w.startCell,
+            row: w.startCell.row - 1
+          }
+        }
+      }
+      return w
+    })
   }
 
   removeColumn(index){
@@ -230,6 +230,18 @@ class Board {
     }
     this.board.forEach((row) => row.splice(index, 1))
     this.width -= 1
+    this.placements = this.placements.map((w) => {
+      if(w.startCell.col > index) {
+        return {
+          ...w,
+          startCell: {
+            ...w.startCell,
+            col: w.startCell.col - 1
+          }
+        }
+      }
+      return w
+    })
   }
 
   locationsOfChar(char) {

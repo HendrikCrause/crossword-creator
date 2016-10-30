@@ -58,14 +58,14 @@ class Block extends React.Component {
     if(this.props.check
         && this.input
         && this.input.input.value !== this.props.value){
-      return ' '
+      return true
     }
-    return null
+    return false
   }
 
   render() {
     const error = this.determineError()
-    const color = error !== null ? colors.ui.redA100 : colors.canvasColor
+    const color = error ? colors.ui.redA100 : colors.canvasColor
     const fieldStyle = {
       backgroundColor: color,
       color: colors.textColor,
@@ -105,11 +105,11 @@ class Block extends React.Component {
           inputStyle={{textAlign: 'center'}}
           underlineStyle={{width: '90%'}}
           id={this.props.idx}
-          value={this.state.value}
+          value={this.props.empty ? this.state.value : this.props.value}
           onChange={this.handleChange.bind(this)}
           onTouchTap={this.props.focusOnBlock}
           ref={(input) => this.input = input }
-          errorText={error}
+          errorText={error ? ' ' : null}
         />
       </Paper>
     )

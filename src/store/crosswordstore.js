@@ -173,6 +173,11 @@ class CrosswordStore extends EventEmitter {
 
   setInnerData(base64Data) {
     this.words = this.decode(base64Data)
+    this.currentGrid = this.makeGrid().map((row) => {
+      return row.map((col) => {
+        return col.char === BLACK_CELL_PLACEHOLDER ? col.char : ''
+      })
+    })
     this.emit('change')
   }
 
@@ -191,18 +196,26 @@ class CrosswordStore extends EventEmitter {
 
     this.getHorizontalWords().forEach((w) => {
       Array.from(w.word).forEach((c, i) => {
+        let number = i === 0 ? w.number : undefined
+        if(grid[w.startCell.row][w.startCell.col + i].number !== undefined) {
+          number = grid[w.startCell.row][w.startCell.col + i].number
+        }
         grid[w.startCell.row][w.startCell.col + i] = {
           char: c,
-          number: i === 0 ? w.number : undefined
+          number: number
         }
       })
     })
 
     this.getVerticalWords().forEach((w) => {
       Array.from(w.word).forEach((c, i) => {
+        let number = i === 0 ? w.number : undefined
+        if(grid[w.startCell.row + i][w.startCell.col].number) {
+          number = grid[w.startCell.row + i][w.startCell.col].number
+        }
         grid[w.startCell.row + i][w.startCell.col] = {
           char: c,
-          number: i === 0 ? w.number : undefined
+          number: number
         }
       })
     })
@@ -293,6 +306,7 @@ class CrosswordStore extends EventEmitter {
 
   enterCharacter(cell, value) {
     this.currentGrid[cell.row][cell.col] = value
+    this.emit('change')
   }
 
   hasErrors() {
@@ -317,7 +331,6 @@ class CrosswordStore extends EventEmitter {
         startCell: matchingPlacement.startCell
       }
     })
-    console.log(this.words);
     this.emit('change')
   }
 

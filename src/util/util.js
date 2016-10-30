@@ -18,3 +18,5 @@ export function pretty(grid) {
             .join(' '))
           .join('\n')
 }
+
+window.pretty = pretty
