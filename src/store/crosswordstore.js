@@ -320,13 +320,10 @@ class CrosswordStore extends EventEmitter {
       puzzle.computePuzzle(this.words.map((w) => w.word))
       foundSuitablePuzzle = this.isSuitablePuzzle(puzzle)
     }
-    // console.log(puzzle.widthHeightRatio());
-
 
     this.words = this.words.map((w) => {
       const matchingPlacement = puzzle.placements.filter((p) => p.word === w.word)[0]
       if(!matchingPlacement) {
-        // console.log('Cannot find placement', w);
         return {
           word: w.word,
           clue: w.clue,
