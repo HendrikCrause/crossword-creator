@@ -3,18 +3,10 @@ import utf8 from 'utf8'
 import base64 from 'base-64'
 
 import dispatcher from '../dispatcher/dispatcher'
-import { ACTION, ORIENTATION, BLACK_CELL_PLACEHOLDER, DIRECTION, MAX_HEIGHT, MAX_WIDTH } from '../constants'
-import Board from '../generator/game'
-
-// const puzzle = [
-//   t o d a y _ _ _
-//   _ _ o _ _ f _ _
-//   c h i l d r e n
-//   _ e n _ _ i _ _
-//   _ l g _ _ e _ _
-//   _ l _ _ _ n _ _
-//   w o r l d d _ _
-// ]
+import { ACTION, ORIENTATION, BLACK_CELL_PLACEHOLDER,
+  DIRECTION, MAX_HEIGHT, MAX_WIDTH,
+  MAX_ORPHAN_WORDS, MAX_BLACK_SQUARE_PERCENTAGE } from '../constants'
+import PuzzleGenerator from '../generator/puzzle'
 
 
 class CrosswordStore extends EventEmitter {
@@ -319,12 +311,28 @@ class CrosswordStore extends EventEmitter {
   }
 
   generateNewCrossword() {
-    let board = new Board(MAX_HEIGHT, MAX_WIDTH)
-    board.computePuzzle(this.words.map((w) => w.word))
-    board.trimBoard()
+    let foundSuitablePuzzle = false
+    let count = 0
+    let puzzle = new PuzzleGenerator(MAX_HEIGHT, MAX_WIDTH)
+
+    while(!foundSuitablePuzzle && count++ < 100) {
+      puzzle = new PuzzleGenerator(MAX_HEIGHT, MAX_WIDTH)
+      puzzle.computePuzzle(this.words.map((w) => w.word))
+      foundSuitablePuzzle = this.isSuitablePuzzle(puzzle)
+    }
+    // console.log(puzzle.widthHeightRatio());
+
 
     this.words = this.words.map((w) => {
-      const matchingPlacement = board.placements.filter((p) => p.word === w.word)[0]
+      const matchingPlacement = puzzle.placements.filter((p) => p.word === w.word)[0]
+      if(!matchingPlacement) {
+        // console.log('Cannot find placement', w);
+        return {
+          word: w.word,
+          clue: w.clue,
+          number: w.number
+        }
+      }
       return {
         ...w,
         orientation: matchingPlacement.orientation,
@@ -332,6 +340,12 @@ class CrosswordStore extends EventEmitter {
       }
     })
     this.emit('change')
+  }
+
+  isSuitablePuzzle(puzzle) {
+    return puzzle.totalOrphanWords() <= MAX_ORPHAN_WORDS &&
+      puzzle.percentageBlackSquares() <= MAX_BLACK_SQUARE_PERCENTAGE &&
+      puzzle.placements.length === this.words.length
   }
 
   handleActions(action) {

@@ -29,5 +29,8 @@ export const DIRECTION = {
   RIGHT: { row:  0, col:  1 }
 }
 
-export const MAX_HEIGHT = 20
-export const MAX_WIDTH = 20
+export const MAX_HEIGHT = 15
+export const MAX_WIDTH = 15
+
+export const MAX_ORPHAN_WORDS = 0
+export const MAX_BLACK_SQUARE_PERCENTAGE = 65

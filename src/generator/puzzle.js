@@ -1,6 +1,6 @@
 import { ORIENTATION, BLACK_CELL_PLACEHOLDER } from '../constants'
 
-class Board {
+class PuzzleGenerator {
   constructor(height, width) {
     this.height = height
     this.width = width
@@ -18,16 +18,57 @@ class Board {
   }
 
   computePuzzle(words) {
+    this.board = this.blankBoard()
     this.placements = []
     let sortedWords = this.sortByLength(words)
     sortedWords.every((w) => {
       let placement = this.suggestPlacement(w)
-      if(placement === null) {
+      if(placement === null || placement === undefined) {
         return false
       }
       this.placeWord(w, {row: placement.row, col: placement.col}, placement.dir)
       return true
     })
+    this.trimBoard()
+  }
+
+  widthHeightRatio() {
+    return this.width / this.height
+  }
+
+  percentageBlackSquares() {
+    return this.totalBlackSquares() / this.totalSquares() * 100
+  }
+
+  totalBlackSquares() {
+    return this.board
+      .map((row) => row.filter((col) => col === BLACK_CELL_PLACEHOLDER).length)
+      .reduce((t, c) => t + c, 0)
+  }
+
+  totalSquares() {
+    return this.height * this.width
+  }
+
+  totalOrphanWords() {
+    return this.placements.filter((p) => this.isOrphanWord(p)).length
+  }
+
+  isOrphanWord(placement) {
+    const otherPlacements = this.placements.filter((p) => p !== placement)
+    return !this.placementToCellArray(placement).some((c) => {
+      return otherPlacements.some((p) => this.cellInPlacement(c, p))
+    })
+  }
+
+  cellInPlacement(cell, placement) {
+    return this.placementToCellArray(placement)
+      .some((c) => c.row === cell.row && c.col === cell.col)
+  }
+
+  placementToCellArray(placement) {
+    return Array.from(placement.word)
+      .map((char, i) => this.findCellAtIndex(i, placement.startCell, 0, placement.orientation))
   }
 
   sortByLength(arr) {
@@ -92,7 +133,7 @@ class Board {
 
   suggestRandomPlacement(word) {
     let iter = 0
-    const MAX_ITERATIONS = 100
+    const MAX_ITERATIONS = 500
     while(iter < MAX_ITERATIONS) {
       iter += 1
 
@@ -322,4 +363,4 @@ class Board {
   }
 }
 
-export default Board
+export default PuzzleGenerator
