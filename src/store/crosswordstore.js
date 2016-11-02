@@ -8,74 +8,49 @@ import { ACTION, ORIENTATION, BLACK_CELL_PLACEHOLDER,
   MAX_ORPHAN_WORDS, MAX_BLACK_SQUARE_PERCENTAGE } from '../constants'
 import PuzzleGenerator from '../generator/puzzle'
 
+const DEMO_DATA = [
+  {
+    number: 1,
+    word: 'hello',
+    clue: 'A friendly greeting'
+  }, {
+    number: 2,
+    word: 'world',
+    clue: 'Also known as Earth'
+  }, {
+    number: 3,
+    word: 'children',
+    clue: 'Miniature people'
+  }, {
+    number: 4,
+    word: 'doing',
+    clue: 'Taking action'
+  }, {
+    number: 5,
+    word: 'today',
+    clue: 'The present'
+  }, {
+    number: 6,
+    word: 'friend',
+    clue: 'A family member you can pick'
+  }
+]
+
 
 class CrosswordStore extends EventEmitter {
   constructor() {
     super()
 
-    this.words = [
-      {
-        number: 1,
-        word: 'hello',
-        clue: 'A friendly greeting',
-        orientation: ORIENTATION.VERTICAL,
-        startCell: {
-          row: 2,
-          col: 1
-        }
-      }, {
-        number: 2,
-        word: 'world',
-        clue: 'Also known as Earth',
-        orientation: ORIENTATION.HORIZONTAL,
-        startCell: {
-          row: 6,
-          col: 0
-        }
-      }, {
-        number: 3,
-        word: 'children',
-        clue: 'Miniature people',
-        orientation: ORIENTATION.HORIZONTAL,
-        startCell: {
-          row: 2,
-          col: 0
-        }
-      }, {
-        number: 4,
-        word: 'doing',
-        clue: 'Taking action',
-        orientation: ORIENTATION.VERTICAL,
-        startCell: {
-          row: 0,
-          col: 2
-        }
-      }, {
-        number: 5,
-        word: 'today',
-        clue: 'The present',
-        orientation: ORIENTATION.HORIZONTAL,
-        startCell: {
-          row: 0,
-          col: 0
-        }
-      }, {
-        number: 6,
-        word: 'friend',
-        clue: 'A family member you can pick',
-        orientation: ORIENTATION.VERTICAL,
-        startCell: {
-          row: 1,
-          col: 5
-        }
-      }
-    ]
+    this.words = DEMO_DATA
 
     this.currentGrid = this.makeGrid().map((row) => {
       return row.map((col) => {
         return col.char === BLACK_CELL_PLACEHOLDER ? col.char : ''
       })
     })
+
+    this.name = ''
+    this.description = ''
   }
 
   wordsAtCell(cell) {
@@ -156,7 +131,12 @@ class CrosswordStore extends EventEmitter {
   }
 
   getInnerData() {
-    return base64.encode(utf8.encode(JSON.stringify(this.words)))
+    const out = {
+      words: this.words,
+      name: this.name,
+      description: this.description
+    }
+    return base64.encode(utf8.encode(JSON.stringify(out)))
   }
 
   decode(base) {
@@ -164,7 +144,10 @@ class CrosswordStore extends EventEmitter {
   }
 
   setInnerData(base64Data) {
-    this.words = this.decode(base64Data)
+    const input = this.decode(base64Data)
+    this.words = input.words
+    this.name = input.name
+    this.description = input.description
     this.currentGrid = this.makeGrid().map((row) => {
       return row.map((col) => {
         return col.char === BLACK_CELL_PLACEHOLDER ? col.char : ''
@@ -305,7 +288,7 @@ class CrosswordStore extends EventEmitter {
     return this.makeGrid()
              .some((row, i) =>
                 row.some((col, j) =>
-                  col.char !== this.currentGrid[i][j]
+                  col.char.toLowerCase() !== this.currentGrid[i][j].toLowerCase()
                 )
               )
   }
@@ -345,6 +328,24 @@ class CrosswordStore extends EventEmitter {
       puzzle.placements.length === this.words.length
   }
 
+  getName() {
+    return this.name
+  }
+
+  getDescription() {
+    return this.description
+  }
+
+  updateName(name) {
+    this.name = name
+    this.emit('change')
+  }
+
+  updateDescription(description) {
+    this.description = description
+    this.emit('change')
+  }
+
   handleActions(action) {
     switch (action.type) {
       case ACTION.ADD_WORD:
@@ -361,6 +362,12 @@ class CrosswordStore extends EventEmitter {
         break
       case ACTION.GENERATE_CROSSWORD:
         this.generateNewCrossword()
+        break
+      case ACTION.UPDATE_NAME:
+        this.updateName(action.name)
+        break
+      case ACTION.UPDATE_DESCRIPTION:
+        this.updateDescription(action.description)
         break
     }
   }

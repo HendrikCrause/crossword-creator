@@ -36,3 +36,17 @@ export function generateCrossword() {
     type: ACTION.GENERATE_CROSSWORD
   })
 }
+
+export function updateName(name) {
+  dispatcher.dispatch({
+    type: ACTION.UPDATE_NAME,
+    name
+  })
+}
+
+export function updateDescription(description) {
+  dispatcher.dispatch({
+    type: ACTION.UPDATE_DESCRIPTION,
+    description
+  })
+}

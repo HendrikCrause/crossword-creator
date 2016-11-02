@@ -8,6 +8,7 @@ import Avatar from 'material-ui/Avatar'
 
 import Crossword from '../crossword/crossword'
 import Clues from '../clues/clues'
+import NameAndDescription from '../header/namedesc'
 
 import crosswordStore from '../../store/crosswordstore'
 
@@ -52,6 +53,7 @@ class Complete extends React.Component {
 
     return (
       <div>
+        <NameAndDescription displayMode={true}/>
         <Crossword
           empty={true}
           check={this.state.check}

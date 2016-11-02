@@ -3,6 +3,7 @@ import FlatButton from 'material-ui/FlatButton'
 
 import AvLoop from 'material-ui/svg-icons/av/loop'
 
+import NameAndDescription from '../header/namedesc'
 import Crossword from '../crossword/crossword'
 import Clues from '../clues/clues'
 import ShareUrl from './shareurl'
@@ -21,6 +22,7 @@ class Review extends React.Component {
             icon={<AvLoop/>}
           />
         </div>
+        <NameAndDescription displayMode={true}/>
         <Crossword />
         <Clues />
         <ShareUrl handlePrev={this.props.handlePrev}/>

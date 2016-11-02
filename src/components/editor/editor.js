@@ -46,11 +46,6 @@ class Editor extends React.Component {
 
   updateWord(word) {
     Actions.updateWord(word)
-    // let wordList = this.state.words
-    // wordList[number] = word
-    // this.setState({
-    //   words: wordList
-    // })
   }
 
   render() {

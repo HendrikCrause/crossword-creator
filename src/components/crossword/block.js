@@ -17,15 +17,28 @@ class Block extends React.Component {
 
   componentDidUpdate() {
     this.handleFocus()
+    window.addEventListener('keydown', this.handleKeyDown.bind(this))
   }
 
   componentDidMount() {
     this.handleFocus()
+    window.removeEventListener('keydown', this.handleKeyDown.bind(this))
   }
 
   handleFocus() {
     if(this.input && this.props.focus) {
       this.input.focus()
+    }
+  }
+
+  handleKeyDown(event) {
+    if(event.key === 'Delete') {
+      if(this.props.focus) {
+        event.preventDefault()
+        this.setState({
+          value: ''
+        })
+      }
     }
   }
 
@@ -57,7 +70,7 @@ class Block extends React.Component {
   determineError() {
     if(this.props.check
         && this.input
-        && this.input.input.value !== this.props.value){
+        && this.input.input.value.toLowerCase() !== this.props.value.toLowerCase()){
       return true
     }
     return false
