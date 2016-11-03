@@ -55,7 +55,6 @@ class Row extends React.Component {
             label="Remove"
             icon={<ContentClear />}
             labelPosition='before'
-            labelStyle={labelStyle}
             onTouchTap={this.remove.bind(this)}
           />
         </TableRowColumn>

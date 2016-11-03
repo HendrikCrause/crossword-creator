@@ -255,6 +255,12 @@ class CrosswordStore extends EventEmitter {
     this.emit('change')
   }
 
+  clearWords() {
+    this.words = []
+    this.addWord()
+    this.emit('change')
+  }
+
   updateWord(word) {
     this.words = this.words
                   .map((w) => {
@@ -368,6 +374,9 @@ class CrosswordStore extends EventEmitter {
         break
       case ACTION.UPDATE_DESCRIPTION:
         this.updateDescription(action.description)
+        break
+      case ACTION.CLEAR_WORDS:
+        this.clearWords()
         break
     }
   }

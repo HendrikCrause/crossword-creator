@@ -48,6 +48,10 @@ class Editor extends React.Component {
     Actions.updateWord(word)
   }
 
+  clearWords() {
+    Actions.clearWords()
+  }
+
   render() {
     return (
       <Table selectable={false}>
@@ -74,6 +78,7 @@ class Editor extends React.Component {
           }
           <ButtonRow
             handleAddWord={this.addWord.bind(this)}
+            handleClearWords={this.clearWords.bind(this)}
           />
         </TableBody>
       </Table>

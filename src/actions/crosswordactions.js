@@ -15,6 +15,12 @@ export function removeWord(number) {
   })
 }
 
+export function clearWords() {
+  dispatcher.dispatch({
+    type: ACTION.CLEAR_WORDS
+  })
+}
+
 export function updateWord(number, word) {
   dispatcher.dispatch({
     type: ACTION.UPDATE_WORD,
