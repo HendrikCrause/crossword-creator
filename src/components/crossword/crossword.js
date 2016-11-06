@@ -3,10 +3,8 @@ import Block from './block'
 import DisabledBlock from './disabledblock'
 import Paper from 'material-ui/Paper'
 
-import { BLOCK_SIZE, BLACK_CELL_PLACEHOLDER, DIRECTION } from '../../constants'
+import { BLOCK_SIZE, MARGIN_SIZE, BLACK_CELL_PLACEHOLDER, DIRECTION } from '../../constants'
 import crosswordStore from '../../store/crosswordstore'
-
-import {pretty} from '../../util/util'
 
 class Crossword extends React.Component {
 
@@ -187,7 +185,7 @@ class Crossword extends React.Component {
 
   render() {
     const style = {
-      margin: 20,
+      margin: MARGIN_SIZE,
       display: 'inline-block',
     }
 

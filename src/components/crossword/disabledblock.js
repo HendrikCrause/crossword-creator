@@ -14,7 +14,8 @@ class DisabledBlock extends React.Component {
       padding: 3,
       margin: 0,
       display: 'inline-block',
-      verticalAlign: 'top'
+      verticalAlign: 'top',
+      boxSizing: 'border-box'
     }
 
     return ( <div style={style} id={this.props.idx } /> )

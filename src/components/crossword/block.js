@@ -88,7 +88,8 @@ class Block extends React.Component {
       width: this.props.size,
       height: this.props.size,
       padding: 3,
-      verticalAlign: 'top'
+      verticalAlign: 'top',
+      boxSizing: 'border-box'
     }
 
     const numberStyle = {

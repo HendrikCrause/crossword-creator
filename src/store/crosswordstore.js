@@ -4,7 +4,7 @@ import base64 from 'base-64'
 
 import dispatcher from '../dispatcher/dispatcher'
 import { ACTION, ORIENTATION, BLACK_CELL_PLACEHOLDER,
-  DIRECTION, MAX_HEIGHT, MAX_WIDTH,
+  DIRECTION, MAX_HEIGHT, MAX_WIDTH, BLOCK_SIZE,
   MAX_ORPHAN_WORDS, MAX_BLACK_SQUARE_PERCENTAGE } from '../constants'
 import PuzzleGenerator from '../generator/puzzle'
 
@@ -40,7 +40,10 @@ const DEMO_DATA = [
 class CrosswordStore extends EventEmitter {
   constructor() {
     super()
+    this.reset()
+  }
 
+  reset() {
     this.words = DEMO_DATA
 
     this.currentGrid = this.makeGrid().map((row) => {

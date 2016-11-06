@@ -4,11 +4,13 @@ import { Router, Route, hashHistory } from 'react-router'
 import Flow from './flow'
 import Complete from './complete'
 
+import {CONTAINER_WIDTH_PERC} from '../../constants'
+
 class Content extends React.Component {
 
   render() {
     const style = {
-      width: '90%',
+      width: CONTAINER_WIDTH_PERC + '%',
       margin: 'auto'
     }
 

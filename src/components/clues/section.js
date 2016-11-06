@@ -5,9 +5,8 @@ import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColu
 class ClueSection extends React.Component {
   render() {
     const style = {
-      display: 'inline-block',
+      display: this.props.inline ? 'inline-block' : 'block',
       verticalAlign: 'top',
-      // width: '45%'
     }
 
     return (

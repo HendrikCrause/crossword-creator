@@ -28,6 +28,7 @@ class Complete extends React.Component {
       crosswordStore.setInnerData(this.props.location.query.data)
     } catch(err) {
       console.error(err)
+      crosswordStore.reset()
       this.props.history.push('')
     }
   }

@@ -21,7 +21,9 @@ export const ORIENTATION = {
     }
 }
 
-export const BLOCK_SIZE = 40
+export const BLOCK_SIZE = 50
+export const MARGIN_SIZE = 20
+export const CONTAINER_WIDTH_PERC = 90
 
 export const BLACK_CELL_PLACEHOLDER = '#'
 
