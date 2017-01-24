@@ -35,7 +35,7 @@ class Clues extends React.Component {
 
   componentWillUnmount() {
     crosswordStore.removeListener('change', this.resetState)
-    window.removeListener('resize', this.resetState)
+    window.removeEventListener('resize', this.resetState)
   }
 
   calcMaxWidth() {
