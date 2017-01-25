@@ -2,11 +2,14 @@ import React from 'react'
 import SubHeader from 'material-ui/Subheader'
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table'
 
+import { MARGIN_SIZE } from '../../constants'
+
 class ClueSection extends React.Component {
   render() {
     const style = {
       display: this.props.inline ? 'inline-block' : 'block',
       verticalAlign: 'top',
+      marginRight: MARGIN_SIZE,
     }
 
     return (

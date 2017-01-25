@@ -216,6 +216,7 @@ class Crossword extends React.Component {
                         focusOnBlock={() => this.focusOnBlock(key)}
                         focus={this.state.focus.row === j && this.state.focus.col === i}
                         check={this.props.check}
+                        correct={this.props.hasNoErrors}
                       />
                     )
                   })

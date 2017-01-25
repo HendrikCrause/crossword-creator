@@ -56,3 +56,10 @@ export function updateDescription(description) {
     description
   })
 }
+
+export function updateCheck(check) {
+  dispatcher.dispatch({
+    type: ACTION.UPDATE_CHECK,
+    check
+  })
+}

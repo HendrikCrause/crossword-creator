@@ -11,6 +11,7 @@ import Clues from '../clues/clues'
 import NameAndDescription from '../header/namedesc'
 
 import crosswordStore from '../../store/crosswordstore'
+import { updateCheck } from '../../actions/crosswordactions'
 
 import colors from '../../theme/colors'
 
@@ -19,13 +20,14 @@ class Complete extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      check: false
+      check: crosswordStore.check
     }
   }
 
   componentWillMount() {
     try {
       crosswordStore.setInnerData(this.props.location.query.data)
+      crosswordStore.on('change', this.resetState.bind(this))
     } catch(err) {
       console.error(err)
       crosswordStore.reset()
@@ -33,17 +35,18 @@ class Complete extends React.Component {
     }
   }
 
-  resetCheck() {
+  componentWillUnmount() {
+    crosswordStore.removeListener('change', this.resetState.bind(this))
+  }
+
+  resetState() {
     this.setState({
-      check: false
+      check: crosswordStore.check
     })
   }
 
   handleCheckButtonClick() {
-    this.setState({
-      check: true
-    })
-    window.setTimeout(this.resetCheck.bind(this), 5000)
+    updateCheck(true)
   }
 
   hasNoErrors() {
@@ -51,6 +54,7 @@ class Complete extends React.Component {
   }
 
   render() {
+    const hasNoErrors = this.hasNoErrors()
 
     return (
       <div>
@@ -58,6 +62,7 @@ class Complete extends React.Component {
         <Crossword
           empty={true}
           check={this.state.check}
+          hasNoErrors={hasNoErrors}
         />
         <Clues />
         <div>
@@ -78,7 +83,7 @@ class Complete extends React.Component {
               style={{display:'inline-block'}}
               >
             {
-              this.hasNoErrors()
+              hasNoErrors
               ? <Chip style={{marginLeft: 20}} backgroundColor={colors.ui.greenA200}>
                   <Avatar backgroundColor={colors.ui.greenA400} icon={<ToggleStar />} />
                   Correct

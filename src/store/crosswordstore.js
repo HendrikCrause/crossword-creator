@@ -54,6 +54,7 @@ class CrosswordStore extends EventEmitter {
 
     this.name = ''
     this.description = ''
+    this.check = false
   }
 
   wordsAtCell(cell) {
@@ -288,8 +289,13 @@ class CrosswordStore extends EventEmitter {
     return this.words.filter((w) => w.orientation === ORIENTATION.VERTICAL)
   }
 
+  longestClueSize() {
+    return Math.max(...this.words.map((w) => w.clue.length))
+  }
+
   enterCharacter(cell, value) {
     this.currentGrid[cell.row][cell.col] = value
+    this.check = false
     this.emit('change')
   }
 
@@ -350,6 +356,11 @@ class CrosswordStore extends EventEmitter {
     this.emit('change')
   }
 
+  updateCheck(check) {
+    this.check = check
+    this.emit('change')
+  }
+
   updateDescription(description) {
     this.description = description
     this.emit('change')
@@ -380,6 +391,9 @@ class CrosswordStore extends EventEmitter {
         break
       case ACTION.CLEAR_WORDS:
         this.clearWords()
+        break
+      case ACTION.UPDATE_CHECK:
+        this.updateCheck(action.check)
         break
     }
   }

@@ -68,7 +68,7 @@ class Block extends React.Component {
   }
 
   determineError() {
-    if(this.props.check
+    if(crosswordStore.check
         && this.input
         && this.input.input.value.toLowerCase() !== this.props.value.toLowerCase()){
       return true
@@ -76,9 +76,20 @@ class Block extends React.Component {
     return false
   }
 
+  determineCorrect() {
+    return this.props.correct
+  }
+
+  determineBackgroundColor(error, correct) {
+    if(error) return colors.ui.redA100
+    if(correct) return colors.ui.greenA200
+    return colors.canvasColor
+  }
+
   render() {
     const error = this.determineError()
-    const color = error ? colors.ui.redA100 : colors.canvasColor
+    const correct = this.determineCorrect()
+    const color = this.determineBackgroundColor(error, correct)
     const fieldStyle = {
       backgroundColor: color,
       color: colors.textColor,
@@ -106,6 +117,12 @@ class Block extends React.Component {
       position: 'relative',
     }
 
+    let underlineStyle = {
+      width: '90%'
+    }
+    if(correct)
+      underlineStyle.borderColor = colors.ui.greenA400
+
     return (
       <Paper
         zDepth={0}
@@ -117,7 +134,8 @@ class Block extends React.Component {
         <TextField
           style={fieldStyle}
           inputStyle={{textAlign: 'center'}}
-          underlineStyle={{width: '90%'}}
+          underlineStyle={underlineStyle}
+          underlineFocusStyle={underlineStyle}
           id={this.props.idx}
           value={this.props.empty ? this.state.value : this.props.value}
           onChange={this.handleChange.bind(this)}
